@@ -37,14 +37,13 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    install_requires=[],
+    install_requires=['click'],
     license=about["__license__"],
-    include_package_data=True,
-    data_files=[
-        ("hoa2dot/parser", glob.glob("hoa2dot/parser/*.lark")),
-    ],
     keywords='hoa2dot',
     packages=find_packages(include=['hoa2dot*']),
+    entry_points={
+        'console_scripts': ["hoa2dot=hoa2dot.hoa2dot:main"],
+    },
     test_suite='tests',
     tests_require=["pytest"],
     zip_safe=False,
