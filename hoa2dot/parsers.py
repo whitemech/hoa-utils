@@ -3,13 +3,15 @@
 
 import logging
 import os
+from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
-from lark import Lark, Transformer
+from lark import Lark, Transformer, Tree
 
 from hoa2dot.core import TrueAcceptance, FalseAcceptance, And, Or, Not, AtomType, Atom, Acceptance, HOAHeader, \
-    AliasLabelExpression
+    AliasLabelExpression, OrLabelExpression, AndLabelExpression, NotLabelExpression, AtomLabelExpression, \
+    TrueLabelExpression, FalseLabelExpression, Edge, State, HOABody, HOA
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +57,7 @@ class HOATransformer(Transformer):
 
     def automaton(self, args):
         """Parse the 'automaton' node."""
-        args[0].dumps()
-        return args[0]
+        return HOA(args[0], args[1])
 
     def header(self, args):
         """Parse the 'header' node.
@@ -94,6 +95,7 @@ class HOATransformer(Transformer):
             acceptance=headertype2value[HeaderItemType.ACCEPTANCE],
             nb_states=headertype2value.get(HeaderItemType.NUM_STATES, None),
             start_states=headertype2value.get(HeaderItemType.START_STATES, None),
+            aliases=headertype2value.get(HeaderItemType.ALIAS, None),
             acceptance_name=headertype2value.get(HeaderItemType.ACCEPTANCE_NAME, None),
             propositions=headertype2value.get(HeaderItemType.PROPOSITIONS, None),
             tool=headertype2value.get(HeaderItemType.TOOL, None),
@@ -157,56 +159,83 @@ class HOATransformer(Transformer):
         return HeaderItemType.HEADERNAME, (key, values)
 
     def body(self, args):
-        """Parse the 'automaton' node."""
-        pass
+        """Parse the 'body' node."""
+        state2edges = OrderedDict({})  # type: Dict[State, List[Edge]]
+        current_state = None
+        for arg in args:
+            if isinstance(arg, State):
+                current_state = arg
+                state2edges[current_state] = []
+            elif isinstance(arg, Edge):
+                state2edges[current_state].append(arg)
+        return HOABody(state2edges)
 
     def state_name(self, args):
-        """Parse the 'automaton' node."""
-        pass
+        """Parse the 'state_name' node."""
+        non_trees = [arg for arg in args if not isinstance(arg, Tree)]
+        kwargs = {arg.data: arg.children[0] for arg in args if isinstance(arg, Tree)}
 
-    def acc_sig(self, args):
-        """Parse the 'automaton' node."""
-        pass
+        if len(args) == 1:
+            return State(index=non_trees[0], **kwargs)
+        elif len(args) == 2:
+            return State(index=non_trees[0], name=non_trees[1], **kwargs)
+        else:
+            raise ValueError("Should not be here.")
 
     def edge(self, args):
-        """Parse the 'automaton' node."""
-        pass
-
-    def label(self, args):
-        """Parse the 'automaton' node."""
-        pass
+        """Parse the 'edge' node."""
+        if len(args) == 1:
+            return args[0]
+        elif len(args) == 2:
+            # either 'label state_conj' or 'state_conj acc-sig'
+            first, second = args
+            if isinstance(first, Tree):
+                return Edge(second, label=first.children[0])
+            else:
+                return Edge(first, acc_sig=second.children)
+        elif len(args) == 3:
+            label, state_conj, acc_sig = args[0].children[0], args[1], args[2].children
+            return Edge(state_conj, label=label, acc_sig=acc_sig)
+        else:
+            raise ValueError("Should not be here.")
 
     def state_conj(self, args):
-        """Parse the 'automaton' node."""
+        """Parse the 'state_conj' node."""
         return args
 
     def label_expr(self, args):
-        """Parse the 'automaton' node."""
-        pass
+        """Parse the 'label_expr' node."""
+        return args[0]
 
     def or_label_expr(self, args):
         """Parse the 'or_label_expr' node."""
-        pass
+        return OrLabelExpression(args)
 
     def and_label_expr(self, args):
         """Parse the 'and_label_expr' node."""
-        pass
+        return AndLabelExpression(args)
 
     def not_label_expr(self, args):
         """Parse the 'not_label_expr' node."""
-        pass
+        return NotLabelExpression(args[0])
 
     def alias_label_expr(self, args):
         """Parse the 'alias_label_expr' node."""
-        pass
+        return AliasLabelExpression(alias=args[0], expression=None)
 
     def atom_label_expr(self, args):
         """Parse the 'atom_label_expr' node."""
-        pass
+        return AtomLabelExpression(args[0])
 
     def boolean_label_expr(self, args):
         """Parse the 'boolean_label_expr' node."""
-        pass
+        boolean = args[0]
+        if boolean is True:
+            return TrueLabelExpression()
+        elif boolean is False:
+            return FalseLabelExpression()
+        else:
+            raise ValueError("Should not be here.")
 
     def acceptance_cond(self, args):
         """Parse the 'acceptance_cond' node."""

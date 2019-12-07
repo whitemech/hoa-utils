@@ -3,6 +3,7 @@
 """This is the command line tool for translating HOA to DOT format."""
 import click
 
+from hoa2dot.core import HOA
 from hoa2dot.parsers import HOAParser
 
 
@@ -14,8 +15,8 @@ def main(infile, output):
     """From HOA to DOT format."""
     input_string = open(infile).read()
     parser = HOAParser()
-    x = parser(input_string)
-    print(x)
+    hoa = parser(input_string)  # type: HOA
+    print(hoa.dumps(), file=open(output, "w") if output is not None else None)
 
 
 if __name__ == '__main__':

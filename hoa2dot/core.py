@@ -208,10 +208,10 @@ class AndLabelExpression(LabelExpression):
     @property
     def propositions(self) -> Set[str]:
         """Get the set of all propositions."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.subexpressions))
+        return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
 
     def __str__(self):
-        return " ".join(map(str, self.subexpressions))
+        return " & ".join(map(str, self.subexpressions))
 
 
 class OrLabelExpression(LabelExpression):
@@ -233,10 +233,10 @@ class OrLabelExpression(LabelExpression):
     @property
     def propositions(self) -> Set[str]:
         """Get the set of all propositions."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.subexpressions))
+        return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
 
     def __str__(self):
-        return " ".join(map(str, self.subexpressions))
+        return " | ".join(map(str, self.subexpressions))
 
 
 class AtomLabelExpression(LabelExpression):
@@ -256,7 +256,7 @@ class AtomLabelExpression(LabelExpression):
         return {self._proposition}
 
     def __str__(self):
-        return self._proposition
+        return str(self._proposition)
 
 
 class NotLabelExpression(LabelExpression):
@@ -341,6 +341,63 @@ class FalseLabelExpression(LabelExpression):
         return set()
 
 
+class State:
+    """This class represents a state of the automaton."""
+
+    def __init__(self, index: int, label: Optional[LabelExpression] = None, name: Optional[str] = None,
+                 acc_sig: Optional[Set[int]] = None):
+        """
+
+        :param index: the number of the state.
+        :param label: the label.
+        :param name: the name of the state.
+        :param acc_sig: the acceptance sets the state belongs to.
+        """
+        self.index = index
+        self.label = label
+        self.name = name
+        self.acc_sig = acc_sig
+
+    def to_hoa_repr(self) -> str:
+        """Get the HOA format representation of the state."""
+        s = "State: "
+        if self.label is not None:
+            s += "[" + str(self.label) + "]" + " "
+        s += str(self.index) + " "
+        if self.name is not None:
+            s += self.name + " "
+        if self.acc_sig is not None:
+            s += "{" + " ".join(map(str, self.acc_sig)) + "}"
+        return s
+
+
+class Edge:
+    """This class represents an edge in the automaton."""
+
+    def __init__(self, state_conj: List[int], label: Optional[LabelExpression] = None,
+                 acc_sig: Optional[Set[int]] = None):
+        """
+        Initialize an edge.
+
+        :param state_conj: the conjunction of states.
+        :param label: the label.
+        :param acc_sig: the acceptance sets the edge belongs to.
+        """
+        self.state_conj = state_conj
+        self.label = label
+        self.acc_sig = acc_sig
+
+    def to_hoa_repr(self) -> str:
+        """Get the HOA format representation of the edge."""
+        s = ""
+        if self.label is not None:
+            s += "[" + str(self.label) + "]" + " "
+        s += "&".join(map(str, self.state_conj)) + " "
+        if self.acc_sig is not None:
+            s += "{" + " ".join(map(str, self.acc_sig)) + "}"
+        return s
+
+
 class HOAHeader:
     """This class implements a data structure for the HOA file format header."""
 
@@ -401,7 +458,7 @@ class HOAHeader:
     @property
     def aliases(self) -> Optional[List[AliasLabelExpression]]:
         """Get the 'aliases' property."""
-        return self._start_states
+        return self._aliases
 
     @property
     def acceptance_name(self) -> Optional[str]:
@@ -453,7 +510,8 @@ class HOAHeader:
             propositions_string = '"' + '" "'.join(p for p in self.propositions) + '"'
             s += "AP: {nb} {prop}\n".format(nb=len(self.propositions), prop=propositions_string)
         if self.aliases is not None and len(self.aliases) > 0:
-            s += "\n".join(["Alias: {}".format(str(alias)) for alias in self.aliases]) + "\n"
+            s += "\n".join(["Alias: {} {}".format(alias_label.alias, str(alias_label.expression))
+                            for alias_label in self.aliases]) + "\n"
         if self.acceptance_name is not None:
             s += "acc-name: {}\n".format(self.acceptance_name)
         s += self.acceptance.get_hoa_repr() + "\n"
@@ -468,8 +526,17 @@ class HOAHeader:
 
         return s
 
+
 class HOABody:
     """This class implements a data structure for the HOA file format header."""
+
+    def __init__(self, state2edges: Dict[State, List[Edge]]):
+        """
+        Initialize the HOA body.
+
+        :param state2edges: mapping from states to outgoing edges.
+        """
+        self.state2edges = state2edges
 
     def dumps(self) -> str:
         """
@@ -477,7 +544,8 @@ class HOABody:
 
         :return: the body string in HOA format.
         """
-        return ""
+        return "\n".join([state.to_hoa_repr() + "\n" + "\n".join(map(lambda x: x.to_hoa_repr(), edges))
+                          for state, edges in self.state2edges.items()]) + "\n"
 
 
 class HOA:
@@ -500,7 +568,7 @@ class HOA:
         :param filepath: the path to the file.
         :return: None.
         """
-        raise NotImplementedError
+        open(filepath, "w").write(self.dumps())
 
     def dumps(self) -> str:
         """
@@ -510,4 +578,4 @@ class HOA:
         """
         header = self.header.dumps()
         body = self.body.dumps()
-        return header + "--BODY--" + body + "--END--"
+        return header + "--BODY--\n" + body + "--END--"
