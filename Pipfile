@@ -18,6 +18,8 @@ mkdocs = "*"
 markdown-include = "*"
 
 [packages]
+click = "*"
+lark-parser = "*"
 
 [requires]
 python_version = "3.7"
