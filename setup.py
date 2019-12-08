@@ -19,6 +19,11 @@ with open(os.path.join(here, 'hoa2dot', '__version__.py'), 'r') as f:
     exec(f.read(), about)
 
 
+install_requires = [
+    "click",
+    "lark-parser"
+]
+
 setup(
     name=about['__title__'],
     description=about['__description__'],
@@ -37,7 +42,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    install_requires=['click'],
+    install_requires=install_requires,
     license=about["__license__"],
     keywords='hoa2dot',
     packages=find_packages(include=['hoa2dot*']),
