@@ -1,5 +1,2 @@
-"""Test dummy."""
-
-
-def test_dummy():
-    """This is a dummy test."""
+# -*- coding: utf-8 -*-
+"""Test the hoa2dot tool."""
