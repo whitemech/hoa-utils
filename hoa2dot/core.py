@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce
 from os import PathLike
-from typing import Optional, List, Set, Dict, Tuple
+from typing import Optional, List, Set, Dict, Tuple, FrozenSet
 
 
 class AcceptanceCondition(ABC):
@@ -13,6 +13,10 @@ class AcceptanceCondition(ABC):
     @abstractmethod
     def __str__(self):
         """Transform the object to string."""
+
+    @abstractmethod
+    def __eq__(self, other):
+        """Check equality between two acceptance conditions."""
 
     @property
     @abstractmethod
@@ -27,8 +31,13 @@ class AcceptanceCondition(ABC):
 
 class AtomType(Enum):
     """This is an enumeration to represent the possible atom types."""
+
     FINITE = "Fin"
     INFINITE = "Inf"
+
+    def __eq__(self, other):
+        """Check equality between two AtomTypes."""
+        return isinstance(other, AtomType)
 
 
 class And(AcceptanceCondition):
@@ -53,7 +62,12 @@ class And(AcceptanceCondition):
         return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions))
 
     def __str__(self):
+        """Transform the And to string."""
         return " ".join(map(str, self.conditions))
+
+    def __eq__(self, other):
+        """Check equality between two Ands."""
+        return isinstance(other, And) and self.conditions == other.conditions
 
 
 class Or(AcceptanceCondition):
@@ -78,7 +92,12 @@ class Or(AcceptanceCondition):
         return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions))
 
     def __str__(self):
+        """Transform the Or to string."""
         return " ".join(map(str, self.conditions))
+
+    def __eq__(self, other):
+        """Check equality between two Ors."""
+        return isinstance(other, Or) and self.conditions == other.conditions
 
 
 class Atom(AcceptanceCondition):
@@ -110,7 +129,13 @@ class Atom(AcceptanceCondition):
         return {self.accepting_set}
 
     def __str__(self):
+        """Transform the Atom to string."""
         return str(self.atom_type.value) + "({})".format(self.accepting_set)
+
+    def __eq__(self, other):
+        """Check equality between two Atoms."""
+        return isinstance(other, Atom) and self.accepting_set == other.accepting_set and \
+            self.atom_type == other.atom_type
 
 
 class Not(Atom):
@@ -131,6 +156,7 @@ class Not(Atom):
         return {self.accepting_set}
 
     def __str__(self):
+        """Transform the Not to string."""
         return str(self.atom_type) + "(!{})".format(self.accepting_set)
 
 
@@ -138,7 +164,12 @@ class TrueAcceptance(AcceptanceCondition):
     """This class represent an "always accepting" condition."""
 
     def __str__(self):
+        """Transform the TrueAcceptance to string."""
         return "t"
+
+    def __eq__(self, other):
+        """Check equality between two TrueAcceptances."""
+        return isinstance(other, TrueAcceptance)
 
     @property
     def accepting_sets(self) -> Set[int]:
@@ -150,7 +181,12 @@ class FalseAcceptance(AcceptanceCondition):
     """This class represent a "never accepting" condition."""
 
     def __str__(self):
+        """Transform the FalseAcceptance to string."""
         return "f"
+
+    def __eq__(self, other):
+        """Check equality between two FalseAcceptances."""
+        return isinstance(other, FalseAcceptance)
 
     @property
     def accepting_sets(self) -> Set[int]:
@@ -175,13 +211,21 @@ class Acceptance:
         """Get a compatible HOA format representation."""
         return "Acceptance: {} {}".format(self.condition.nb_accepting_sets, str(self.condition))
 
+    def __eq__(self, other):
+        """Check equality between two Acceptances."""
+        return isinstance(other, Acceptance) and self.condition == other.condition
+
 
 class LabelExpression(ABC):
     """This class implements a label expression."""
 
     @abstractmethod
     def __str__(self):
-        """Transform the object to string."""
+        """Transform the LabelExpression to string."""
+
+    @abstractmethod
+    def __eq__(self, other):
+        """Check equality between two label expressions."""
 
     @property
     @abstractmethod
@@ -211,7 +255,12 @@ class AndLabelExpression(LabelExpression):
         return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
 
     def __str__(self):
+        """Transform the AndLabelExpression to string."""
         return " & ".join(map(str, self.subexpressions))
+
+    def __eq__(self, other):
+        """Check equality between two AndLabelExpressions."""
+        return isinstance(other, AndLabelExpression) and self.subexpressions == other.subexpressions
 
 
 class OrLabelExpression(LabelExpression):
@@ -236,7 +285,12 @@ class OrLabelExpression(LabelExpression):
         return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
 
     def __str__(self):
+        """Transform the OrLabelExpression to string."""
         return " | ".join(map(str, self.subexpressions))
+
+    def __eq__(self, other):
+        """Check equality between two OrLabelExpressions."""
+        return isinstance(other, OrLabelExpression) and self.subexpressions == other.subexpressions
 
 
 class AtomLabelExpression(LabelExpression):
@@ -256,7 +310,12 @@ class AtomLabelExpression(LabelExpression):
         return {self._proposition}
 
     def __str__(self):
+        """Transform the AtomLabelExpression to string."""
         return str(self._proposition)
+
+    def __eq__(self, other):
+        """Check equality between two AtomLabelExpressions."""
+        return isinstance(other, AtomLabelExpression) and self.propositions == other.propositions
 
 
 class NotLabelExpression(LabelExpression):
@@ -281,7 +340,12 @@ class NotLabelExpression(LabelExpression):
         return self.subexpression.propositions
 
     def __str__(self):
+        """Transform the NotLabelExpression to string."""
         return "!" + str(self.subexpression)
+
+    def __eq__(self, other):
+        """Check equality between two NotLabelExpressions."""
+        return isinstance(other, NotLabelExpression) and self.subexpression == other.subexpression
 
 
 class AliasLabelExpression(LabelExpression):
@@ -309,19 +373,30 @@ class AliasLabelExpression(LabelExpression):
 
     @property
     def propositions(self) -> Set[str]:
-        """Ge the propositions."""
+        """Get propositions."""
         assert self.expression is not None, "Cannot get propositions."
         return self.expression.propositions
 
     def __str__(self):
+        """Transform the AliasLabelExpression to string."""
         return self.alias
+
+    def __eq__(self, other):
+        """Check equality between two AliasLabelExpressions."""
+        return isinstance(other, AliasLabelExpression) and self.alias == other.alias and \
+            self.expression == other.expression
 
 
 class TrueLabelExpression(LabelExpression):
     """This class represent an "always accepting" condition."""
 
     def __str__(self):
+        """Transform the TrueLabelExpression to string."""
         return "t"
+
+    def __eq__(self, other):
+        """Check equality between two TrueLabelExpressions."""
+        return isinstance(other, TrueLabelExpression) and str(self) == str(other)
 
     @property
     def propositions(self) -> Set[str]:
@@ -333,7 +408,12 @@ class FalseLabelExpression(LabelExpression):
     """This class represent a "never accepting" condition."""
 
     def __str__(self):
+        """Transform the FalseLabelExpression to string."""
         return "f"
+
+    def __eq__(self, other):
+        """Check equality between two FalseLabelExpressions."""
+        return isinstance(other, FalseLabelExpression) and str(self) == str(other)
 
     @property
     def propositions(self) -> Set[str]:
@@ -345,13 +425,15 @@ class State:
     """This class represents a state of the automaton."""
 
     def __init__(self, index: int, label: Optional[LabelExpression] = None, name: Optional[str] = None,
-                 acc_sig: Optional[Set[int]] = None):
+                 acc_sig: Optional[FrozenSet[int]] = None):
         """
+        Initialize a State.
 
         :param index: the number of the state.
         :param label: the label.
         :param name: the name of the state.
         :param acc_sig: the acceptance sets the state belongs to.
+
         """
         self.index = index
         self.label = label
@@ -365,17 +447,26 @@ class State:
             s += "[" + str(self.label) + "]" + " "
         s += str(self.index) + " "
         if self.name is not None:
-            s += self.name + " "
+            s += '\"' + self.name + '\"' + " "
         if self.acc_sig is not None:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
+
+    def __eq__(self, other):
+        """Check equality between two States."""
+        return isinstance(other, State) and self.index == other.index and self.label == other.label and \
+            self.name == other.name and self.acc_sig == other.acc_sig
+
+    def __hash__(self):
+        """Define hash for State."""
+        return hash((self.index, self.label, self.name, self.name, self.acc_sig))
 
 
 class Edge:
     """This class represents an edge in the automaton."""
 
     def __init__(self, state_conj: List[int], label: Optional[LabelExpression] = None,
-                 acc_sig: Optional[Set[int]] = None):
+                 acc_sig: Optional[FrozenSet[int]] = None):
         """
         Initialize an edge.
 
@@ -396,6 +487,11 @@ class Edge:
         if self.acc_sig is not None:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
+
+    def __eq__(self, other):
+        """Check equality between two Edges."""
+        return isinstance(other, Edge) and self.state_conj == other.state_conj and self.label == other.label and \
+            self.acc_sig == other.acc_sig
 
 
 class HOAHeader:
