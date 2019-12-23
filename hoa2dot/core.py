@@ -14,6 +14,10 @@ class AcceptanceCondition(ABC):
     def __str__(self):
         """Transform the object to string."""
 
+    @abstractmethod
+    def __eq__(self, other):
+        """Check equality between two acceptance conditions."""
+
     @property
     @abstractmethod
     def accepting_sets(self) -> Set[int]:
@@ -27,8 +31,13 @@ class AcceptanceCondition(ABC):
 
 class AtomType(Enum):
     """This is an enumeration to represent the possible atom types."""
+
     FINITE = "Fin"
     INFINITE = "Inf"
+
+    def __eq__(self, other):
+        """Check equality between two AtomTypes."""
+        return isinstance(other, AtomType)
 
 
 class And(AcceptanceCondition):
@@ -55,6 +64,10 @@ class And(AcceptanceCondition):
     def __str__(self):
         return " ".join(map(str, self.conditions))
 
+    def __eq__(self, other):
+        """Check equality between two AtomTypes."""
+        return isinstance(other, And) and self.conditions == other.conditions
+
 
 class Or(AcceptanceCondition):
     """This class implements a disjunction between acceptance conditions."""
@@ -79,6 +92,9 @@ class Or(AcceptanceCondition):
 
     def __str__(self):
         return " ".join(map(str, self.conditions))
+
+    def __eq__(self, other):
+        return isinstance(other, Or) and self.conditions == other.conditions
 
 
 class Atom(AcceptanceCondition):
@@ -112,6 +128,10 @@ class Atom(AcceptanceCondition):
     def __str__(self):
         return str(self.atom_type.value) + "({})".format(self.accepting_set)
 
+    def __eq__(self, other):
+        return isinstance(other, Atom) and self.accepting_set == other.accepting_set and \
+            self.atom_type == other.atom_type
+
 
 class Not(Atom):
     """This class implements a negation of an atom."""
@@ -140,6 +160,9 @@ class TrueAcceptance(AcceptanceCondition):
     def __str__(self):
         return "t"
 
+    def __eq__(self, other):
+        return isinstance(other, TrueAcceptance)
+
     @property
     def accepting_sets(self) -> Set[int]:
         """Get the set of accepting sets."""
@@ -151,6 +174,9 @@ class FalseAcceptance(AcceptanceCondition):
 
     def __str__(self):
         return "f"
+
+    def __eq__(self, other):
+        return isinstance(other, FalseAcceptance)
 
     @property
     def accepting_sets(self) -> Set[int]:
@@ -175,6 +201,9 @@ class Acceptance:
         """Get a compatible HOA format representation."""
         return "Acceptance: {} {}".format(self.condition.nb_accepting_sets, str(self.condition))
 
+    def __eq__(self, other):
+        return isinstance(other, Acceptance) and self.condition == other.condition
+
 
 class LabelExpression(ABC):
     """This class implements a label expression."""
@@ -182,6 +211,10 @@ class LabelExpression(ABC):
     @abstractmethod
     def __str__(self):
         """Transform the object to string."""
+
+    @abstractmethod
+    def __eq__(self, other):
+        """Check equality between two label expressions."""
 
     @property
     @abstractmethod
@@ -213,6 +246,9 @@ class AndLabelExpression(LabelExpression):
     def __str__(self):
         return " & ".join(map(str, self.subexpressions))
 
+    def __eq__(self, other):
+        return isinstance(other, AndLabelExpression) and self.subexpressions == other.subexpressions
+
 
 class OrLabelExpression(LabelExpression):
     """This class implements a disjunction between label expression."""
@@ -238,6 +274,9 @@ class OrLabelExpression(LabelExpression):
     def __str__(self):
         return " | ".join(map(str, self.subexpressions))
 
+    def __eq__(self, other):
+        return isinstance(other, OrLabelExpression) and self.subexpressions == other.subexpressions
+
 
 class AtomLabelExpression(LabelExpression):
     """This class implements an atom in a label expression."""
@@ -257,6 +296,9 @@ class AtomLabelExpression(LabelExpression):
 
     def __str__(self):
         return str(self._proposition)
+
+    def __eq__(self, other):
+        return isinstance(other, AtomLabelExpression) and self.propositions == other.propositions
 
 
 class NotLabelExpression(LabelExpression):
@@ -282,6 +324,9 @@ class NotLabelExpression(LabelExpression):
 
     def __str__(self):
         return "!" + str(self.subexpression)
+
+    def __eq__(self, other):
+        return isinstance(other, NotLabelExpression) and self.subexpression == other.subexpression
 
 
 class AliasLabelExpression(LabelExpression):
@@ -309,12 +354,16 @@ class AliasLabelExpression(LabelExpression):
 
     @property
     def propositions(self) -> Set[str]:
-        """Ge the propositions."""
+        """Get propositions."""
         assert self.expression is not None, "Cannot get propositions."
         return self.expression.propositions
 
     def __str__(self):
         return self.alias
+
+    def __eq__(self, other):
+        return isinstance(other, AliasLabelExpression) and self.alias == other.alias and \
+            self.expression == other.expression
 
 
 class TrueLabelExpression(LabelExpression):
@@ -322,6 +371,9 @@ class TrueLabelExpression(LabelExpression):
 
     def __str__(self):
         return "t"
+
+    def __eq__(self, other):
+        return isinstance(other, TrueLabelExpression) and self.__str__() == other.__str__()
 
     @property
     def propositions(self) -> Set[str]:
@@ -334,6 +386,9 @@ class FalseLabelExpression(LabelExpression):
 
     def __str__(self):
         return "f"
+
+    def __eq__(self, other):
+        return isinstance(other, FalseLabelExpression) and self.__str__() == other.__str__()
 
     @property
     def propositions(self) -> Set[str]:
@@ -370,6 +425,13 @@ class State:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
 
+    def __eq__(self, other):
+        return isinstance(other, State) and self.index == other.index and self.label == other.label and \
+            self.name == other.name and self.acc_sig == other.acc_sig
+
+    def __hash__(self):
+        return hash((self.index, self.label, self.name, self.name))  # being a set, acc_sig is unhashable
+
 
 class Edge:
     """This class represents an edge in the automaton."""
@@ -396,6 +458,10 @@ class Edge:
         if self.acc_sig is not None:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
+
+    def __eq__(self, other):
+        return isinstance(other, Edge) and self.state_conj == other.state_conj and self.label == other.label and \
+            self.acc_sig == other.acc_sig
 
 
 class HOAHeader:
