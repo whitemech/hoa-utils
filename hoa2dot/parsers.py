@@ -163,7 +163,7 @@ class HOATransformer(Transformer):
 
     def body(self, args):
         """Parse the 'body' node."""
-        state2edges = OrderedDict({})  # type: Dict[State, List[Edge]]
+        state2edges: Dict[State, List[Edge]] = OrderedDict({})
         current_state = None
         for arg in args:
             if isinstance(arg, State):
@@ -184,7 +184,7 @@ class HOATransformer(Transformer):
         if len(non_trees) == 1:
             return State(index=non_trees[0], **kwargs)
         elif len(non_trees) == 2:
-            return State(index=non_trees[0], name=non_trees[1], **kwargs)
+            return State(index=non_trees[0], name=non_trees[1].strip('\"'), **kwargs)
         else:
             raise ValueError("Should not be here.")
 

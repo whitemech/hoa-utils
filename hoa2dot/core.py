@@ -447,7 +447,7 @@ class State:
             s += "[" + str(self.label) + "]" + " "
         s += str(self.index) + " "
         if self.name is not None:
-            s += self.name + " "
+            s += '\"' + self.name + '\"' + " "
         if self.acc_sig is not None:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
