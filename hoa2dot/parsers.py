@@ -4,6 +4,7 @@
 import logging
 import os
 from collections import OrderedDict
+from functools import reduce
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -173,11 +174,21 @@ class HOATransformer(Transformer):
     def state_name(self, args):
         """Parse the 'state_name' node."""
         non_trees = [arg for arg in args if not isinstance(arg, Tree)]
-        kwargs = {arg.data: arg.children[0] for arg in args if isinstance(arg, Tree)}
+        # kwargs = {arg.data: arg.children[0] for arg in args if isinstance(arg, Tree)}
 
-        if len(args) == 1:
+        # make acc_sig a set not a list, this is naive...
+        kwargs = dict()
+        for arg in args:
+            if isinstance(arg, Tree):
+                if arg.data == "acc_sig":
+                    kwargs[arg.data] = set()
+                    kwargs[arg.data].add(arg.children[0])
+                else:
+                    kwargs[arg.data] = arg.children[0]
+
+        if len(non_trees) == 1:
             return State(index=non_trees[0], **kwargs)
-        elif len(args) == 2:
+        elif len(non_trees) == 2:
             return State(index=non_trees[0], name=non_trees[1], **kwargs)
         else:
             raise ValueError("Should not be here.")
@@ -185,17 +196,17 @@ class HOATransformer(Transformer):
     def edge(self, args):
         """Parse the 'edge' node."""
         if len(args) == 1:
-            return args[0]
+            return Edge(args[0])
         elif len(args) == 2:
             # either 'label state_conj' or 'state_conj acc-sig'
             first, second = args
             if isinstance(first, Tree):
                 return Edge(second, label=first.children[0])
             else:
-                return Edge(first, acc_sig=second.children)
+                return Edge(first, acc_sig=set(second.children))  # acc_sig as set()
         elif len(args) == 3:
-            label, state_conj, acc_sig = args[0].children[0], args[1], args[2].children
-            return Edge(state_conj, label=label, acc_sig=acc_sig)
+            label, state_conj, acc_sig = args[0].children[0], args[1], set(args[2].children)  # acc_sig as set()
+            return Edge(state_conj, label=label, acc_sig=set(acc_sig))  # acc_sig as set()
         else:
             raise ValueError("Should not be here.")
 
@@ -225,7 +236,7 @@ class HOATransformer(Transformer):
 
     def atom_label_expr(self, args):
         """Parse the 'atom_label_expr' node."""
-        return AtomLabelExpression(args[0])
+        return AtomLabelExpression(str(args[0]))
 
     def boolean_label_expr(self, args):
         """Parse the 'boolean_label_expr' node."""
@@ -255,11 +266,11 @@ class HOATransformer(Transformer):
 
     def and_acceptance_cond(self, args):
         """Parse the 'and_acceptance_cond' node."""
-        return And(args)
+        return And(list(reduce(lambda x, y: x + y, map(lambda x: x.conditions if isinstance(x, And) else [x], args))))
 
     def or_acceptance_cond(self, args):
         """Parse the 'or_acceptance_cond' node."""
-        return Or(args)
+        return Or(list(reduce(lambda x, y: x + y, map(lambda x: x.conditions if isinstance(x, Or) else [x], args))))
 
     def boolean_acceptance_cond(self, args):
         """Parse the 'boolean_acceptance_cond' node."""
