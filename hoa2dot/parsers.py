@@ -163,7 +163,7 @@ class HOATransformer(Transformer):
 
     def body(self, args):
         """Parse the 'body' node."""
-        state2edges: Dict[State, List[Edge]] = OrderedDict({})
+        state2edges = OrderedDict({})  # type: Dict[State, List[Edge]]
         current_state = None
         for arg in args:
             if isinstance(arg, State):

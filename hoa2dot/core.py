@@ -459,7 +459,7 @@ class State:
 
     def __hash__(self):
         """Define hash for State."""
-        return hash((self.index, self.label, self.name, self.name, self.acc_sig))  # being a set, acc_sig is unhashable
+        return hash((self.index, self.label, self.name, self.name, self.acc_sig))
 
 
 class Edge:
