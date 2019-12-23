@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class HeaderItemType:
     """Enumeration of header types."""
+
     NUM_STATES = "num_states"
     START_STATES = "start_state"
     PROPOSITIONS = "propositions"
@@ -44,6 +45,7 @@ class HOATransformer(Transformer):
     HEADERNAME = str
 
     def BOOLEAN(self, args):
+        """Define BOOLEAN types."""
         label = args[0]
         if label == "t":
             return True
@@ -174,17 +176,10 @@ class HOATransformer(Transformer):
     def state_name(self, args):
         """Parse the 'state_name' node."""
         non_trees = [arg for arg in args if not isinstance(arg, Tree)]
-        # kwargs = {arg.data: arg.children[0] for arg in args if isinstance(arg, Tree)}
+        kwargs = {arg.data: arg.children[0] for arg in args if isinstance(arg, Tree)}
 
-        # make acc_sig a set not a list, this is naive...
-        kwargs = dict()
-        for arg in args:
-            if isinstance(arg, Tree):
-                if arg.data == "acc_sig":
-                    kwargs[arg.data] = set()
-                    kwargs[arg.data].add(arg.children[0])
-                else:
-                    kwargs[arg.data] = arg.children[0]
+        if "acc_sig" in kwargs.keys():
+            kwargs["acc_sig"] = frozenset({kwargs["acc_sig"]})
 
         if len(non_trees) == 1:
             return State(index=non_trees[0], **kwargs)
@@ -203,10 +198,10 @@ class HOATransformer(Transformer):
             if isinstance(first, Tree):
                 return Edge(second, label=first.children[0])
             else:
-                return Edge(first, acc_sig=set(second.children))  # acc_sig as set()
+                return Edge(first, acc_sig=frozenset(second.children))  # acc_sig as frozenset()
         elif len(args) == 3:
-            label, state_conj, acc_sig = args[0].children[0], args[1], set(args[2].children)  # acc_sig as set()
-            return Edge(state_conj, label=label, acc_sig=set(acc_sig))  # acc_sig as set()
+            label, state_conj, acc_sig = args[0].children[0], args[1], frozenset(args[2].children)
+            return Edge(state_conj, label=label, acc_sig=acc_sig)
         else:
             raise ValueError("Should not be here.")
 

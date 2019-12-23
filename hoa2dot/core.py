@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce
 from os import PathLike
-from typing import Optional, List, Set, Dict, Tuple
+from typing import Optional, List, Set, Dict, Tuple, FrozenSet
 
 
 class AcceptanceCondition(ABC):
@@ -168,7 +168,7 @@ class TrueAcceptance(AcceptanceCondition):
         return "t"
 
     def __eq__(self, other):
-        """Check equality between two TrueAcceptances"""
+        """Check equality between two TrueAcceptances."""
         return isinstance(other, TrueAcceptance)
 
     @property
@@ -185,7 +185,7 @@ class FalseAcceptance(AcceptanceCondition):
         return "f"
 
     def __eq__(self, other):
-        """Check equality between two FalseAcceptances"""
+        """Check equality between two FalseAcceptances."""
         return isinstance(other, FalseAcceptance)
 
     @property
@@ -212,7 +212,7 @@ class Acceptance:
         return "Acceptance: {} {}".format(self.condition.nb_accepting_sets, str(self.condition))
 
     def __eq__(self, other):
-        """Check equality between two Acceptances"""
+        """Check equality between two Acceptances."""
         return isinstance(other, Acceptance) and self.condition == other.condition
 
 
@@ -425,13 +425,15 @@ class State:
     """This class represents a state of the automaton."""
 
     def __init__(self, index: int, label: Optional[LabelExpression] = None, name: Optional[str] = None,
-                 acc_sig: Optional[Set[int]] = None):
+                 acc_sig: Optional[FrozenSet[int]] = None):
         """
+        Initialize a State.
 
         :param index: the number of the state.
         :param label: the label.
         :param name: the name of the state.
         :param acc_sig: the acceptance sets the state belongs to.
+
         """
         self.index = index
         self.label = label
@@ -457,14 +459,14 @@ class State:
 
     def __hash__(self):
         """Define hash for State."""
-        return hash((self.index, self.label, self.name, self.name))  # being a set, acc_sig is unhashable
+        return hash((self.index, self.label, self.name, self.name, self.acc_sig))  # being a set, acc_sig is unhashable
 
 
 class Edge:
     """This class represents an edge in the automaton."""
 
     def __init__(self, state_conj: List[int], label: Optional[LabelExpression] = None,
-                 acc_sig: Optional[Set[int]] = None):
+                 acc_sig: Optional[FrozenSet[int]] = None):
         """
         Initialize an edge.
 

@@ -56,12 +56,12 @@ class TestParsingAut1:
     def test_body(self):
         """Test that the HOA body is correct."""
         state_edges_dict = OrderedDict({})
-        state_edges_dict[State(0, None, '"a U b"', None)] = [Edge([0], AndLabelExpression([AtomLabelExpression("0"),
-                                                                                           NotLabelExpression(
-                                                                                               AtomLabelExpression("1"))
-                                                                                           ]), {0}),
-                                                             Edge([1], AtomLabelExpression("1"), {0})]
-        state_edges_dict[State(1, None, None, None)] = [Edge([1], TrueLabelExpression(), {1})]
+        state_edges_dict[State(0, name='"a U b"')] = [Edge([0], AndLabelExpression([AtomLabelExpression("0"),
+                                                                                    NotLabelExpression(
+                                                                                        AtomLabelExpression("1"))]),
+                                                           frozenset({0})), Edge([1], AtomLabelExpression("1"),
+                                                                                 frozenset({0}))]
+        state_edges_dict[State(1)] = [Edge([1], TrueLabelExpression(), frozenset({1}))]
         assert self.hoa_body.state2edges == state_edges_dict
 
 
@@ -105,12 +105,11 @@ class TestParsingAut2:
     def test_body(self):
         """Test that the HOA body is correct."""
         state_edges_dict = OrderedDict({})
-        state_edges_dict[State(0, None, '"a U b"', {0})] = [Edge([2], None, None), Edge([0], None, None),
-                                                            Edge([1], None, None), Edge([1], None, None)]
+        state_edges_dict[State(0, name='"a U b"', acc_sig=frozenset({0}))] = [Edge([2]), Edge([0]), Edge([1]),
+                                                                              Edge([1])]
 
-        state_edges_dict[State(1, None, None, {1})] = [Edge([1], None, None), Edge([1], None, None),
-                                                       Edge([1], None, None), Edge([1], None, None)]
-        state_edges_dict[State(2, None, '"sink state"', {0})] = [Edge([2], None, None), Edge([2], None, None),
-                                                                 Edge([2], None, None), Edge([2], None, None)]
+        state_edges_dict[State(1, acc_sig=frozenset({1}))] = [Edge([1]), Edge([1]), Edge([1]), Edge([1])]
+        state_edges_dict[State(2, name='"sink state"', acc_sig=frozenset({0}))] = [Edge([2]), Edge([2]), Edge([2]),
+                                                                                   Edge([2])]
 
         assert self.hoa_body.state2edges == state_edges_dict
