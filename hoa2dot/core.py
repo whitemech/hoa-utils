@@ -396,7 +396,7 @@ class TrueLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two TrueLabelExpressions."""
-        return isinstance(other, TrueLabelExpression) and self.__str__() == other.__str__()
+        return isinstance(other, TrueLabelExpression) and str(self) == str(other)
 
     @property
     def propositions(self) -> Set[str]:
@@ -413,7 +413,7 @@ class FalseLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two FalseLabelExpressions."""
-        return isinstance(other, FalseLabelExpression) and self.__str__() == other.__str__()
+        return isinstance(other, FalseLabelExpression) and str(self) == str(other)
 
     @property
     def propositions(self) -> Set[str]:
