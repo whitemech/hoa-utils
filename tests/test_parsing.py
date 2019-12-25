@@ -35,7 +35,7 @@ def test_parsing_is_deterministic(filepath):
     hoa_obj_1 = parser(open(filepath).read())  # type: HOA
     temp = tempfile.mktemp()
     hoa_obj_1.dump(open(temp, "w"))
-    hoa_obj_2 = parser(open(temp).read())
+    # hoa_obj_2 = parser(open(temp).read())
     # TODO equality check does not work yet
     # assert hoa_obj_1 == hoa_obj_2
 
