@@ -2,6 +2,7 @@
 """This module contains the definition of the HOA parser."""
 
 import logging
+import operator
 import os
 from collections import OrderedDict
 from functools import reduce
@@ -207,7 +208,8 @@ class HOATransformer(Transformer):
 
     def state_conj(self, args):
         """Parse the 'state_conj' node."""
-        return args
+        # compute the flat list
+        return list(reduce(operator.add, map(lambda x: [x] if not isinstance(x, list) else x, args)))
 
     def label_expr(self, args):
         """Parse the 'label_expr' node."""

@@ -46,7 +46,7 @@ setup(
     keywords='hoa2dot',
     packages=find_packages(include=['hoa2dot*']),
     entry_points={
-        'console_scripts': ["hoa2dot=hoa2dot.hoa2dot:main"],
+        'console_scripts': ["hoa2dot=hoa2dot.__main__:main"],
     },
     test_suite='tests',
     tests_require=["pytest"],

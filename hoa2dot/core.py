@@ -3,8 +3,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce
-from os import PathLike
-from typing import Optional, List, Set, Dict, Tuple, FrozenSet
+from typing import Optional, List, Set, Dict, Tuple, FrozenSet, TextIO
 
 
 class AcceptanceCondition(ABC):
@@ -63,7 +62,7 @@ class And(AcceptanceCondition):
 
     def __str__(self):
         """Transform the And to string."""
-        return " ".join(map(str, self.conditions))
+        return "(" + " & ".join(map(str, self.conditions)) + ")"
 
     def __eq__(self, other):
         """Check equality between two Ands."""
@@ -93,7 +92,7 @@ class Or(AcceptanceCondition):
 
     def __str__(self):
         """Transform the Or to string."""
-        return " ".join(map(str, self.conditions))
+        return "(" + " | ".join(map(str, self.conditions)) + ")"
 
     def __eq__(self, other):
         """Check equality between two Ors."""
@@ -227,6 +226,10 @@ class LabelExpression(ABC):
     def __eq__(self, other):
         """Check equality between two label expressions."""
 
+    @abstractmethod
+    def __hash__(self):
+        """Compute the hash of a label expression."""
+
     @property
     @abstractmethod
     def propositions(self) -> Set[str]:
@@ -262,6 +265,10 @@ class AndLabelExpression(LabelExpression):
         """Check equality between two AndLabelExpressions."""
         return isinstance(other, AndLabelExpression) and self.subexpressions == other.subexpressions
 
+    def __hash__(self):
+        """Compute the hash of an AndLabelExpression."""
+        return hash((AndLabelExpression, *self.subexpressions))
+
 
 class OrLabelExpression(LabelExpression):
     """This class implements a disjunction between label expression."""
@@ -292,6 +299,10 @@ class OrLabelExpression(LabelExpression):
         """Check equality between two OrLabelExpressions."""
         return isinstance(other, OrLabelExpression) and self.subexpressions == other.subexpressions
 
+    def __hash__(self):
+        """Compute the hash of an OrLabelExpression."""
+        return hash((OrLabelExpression, *self.subexpressions))
+
 
 class AtomLabelExpression(LabelExpression):
     """This class implements an atom in a label expression."""
@@ -316,6 +327,10 @@ class AtomLabelExpression(LabelExpression):
     def __eq__(self, other):
         """Check equality between two AtomLabelExpressions."""
         return isinstance(other, AtomLabelExpression) and self.propositions == other.propositions
+
+    def __hash__(self):
+        """Compute the hash of an AtomLabelExpression."""
+        return hash((AtomLabelExpression, self._proposition))
 
 
 class NotLabelExpression(LabelExpression):
@@ -346,6 +361,10 @@ class NotLabelExpression(LabelExpression):
     def __eq__(self, other):
         """Check equality between two NotLabelExpressions."""
         return isinstance(other, NotLabelExpression) and self.subexpression == other.subexpression
+
+    def __hash__(self):
+        """Compute the hash of a NotLabelExpression."""
+        return hash((NotLabelExpression, self.subexpression))
 
 
 class AliasLabelExpression(LabelExpression):
@@ -386,6 +405,10 @@ class AliasLabelExpression(LabelExpression):
         return isinstance(other, AliasLabelExpression) and self.alias == other.alias and \
             self.expression == other.expression
 
+    def __hash__(self):
+        """Compute the hash of an AliasLabelExpression."""
+        return hash((AliasLabelExpression, self.alias))
+
 
 class TrueLabelExpression(LabelExpression):
     """This class represent an "always accepting" condition."""
@@ -403,6 +426,10 @@ class TrueLabelExpression(LabelExpression):
         """Get the set of all propositions."""
         return set()
 
+    def __hash__(self):
+        """Compute the hash of a TrueLabelExpression."""
+        return hash((TrueLabelExpression, ))
+
 
 class FalseLabelExpression(LabelExpression):
     """This class represent a "never accepting" condition."""
@@ -419,6 +446,10 @@ class FalseLabelExpression(LabelExpression):
     def propositions(self) -> Set[str]:
         """Get the set of all propositions."""
         return set()
+
+    def __hash__(self):
+        """Compute the hash of a FalseLabelExpression."""
+        return hash((FalseLabelExpression, ))
 
 
 class State:
@@ -657,14 +688,14 @@ class HOA:
         self.header = header
         self.body = body
 
-    def dump(self, filepath: PathLike) -> None:
+    def dump(self, fp: TextIO) -> None:
         """
         Dump the data to a file.
 
-        :param filepath: the path to the file.
+        :param fp: the file pointer.
         :return: None.
         """
-        open(filepath, "w").write(self.dumps())
+        fp.write(self.dumps())
 
     def dumps(self) -> str:
         """

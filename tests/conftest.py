@@ -4,5 +4,5 @@ import inspect
 import os
 from pathlib import Path
 
-CUR_PATH = os.path.dirname(inspect.getfile(inspect.currentframe()))  # type: ignore
-ROOT_DIR = str(Path(CUR_PATH, "..").resolve())  # type: ignore
+TEST_ROOT_DIR = os.path.dirname(inspect.getfile(inspect.currentframe()))  # type: ignore
+ROOT_DIR = str(Path(TEST_ROOT_DIR, "..").resolve())  # type: ignore
