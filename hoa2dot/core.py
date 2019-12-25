@@ -259,7 +259,7 @@ class AndLabelExpression(LabelExpression):
 
     def __str__(self):
         """Transform the AndLabelExpression to string."""
-        return " & ".join(map(str, self.subexpressions))
+        return "(" + " & ".join(map(str, self.subexpressions)) + ")"
 
     def __eq__(self, other):
         """Check equality between two AndLabelExpressions."""
@@ -293,7 +293,7 @@ class OrLabelExpression(LabelExpression):
 
     def __str__(self):
         """Transform the OrLabelExpression to string."""
-        return " | ".join(map(str, self.subexpressions))
+        return "(" + " | ".join(map(str, self.subexpressions)) + ")"
 
     def __eq__(self, other):
         """Check equality between two OrLabelExpressions."""
@@ -356,7 +356,7 @@ class NotLabelExpression(LabelExpression):
 
     def __str__(self):
         """Transform the NotLabelExpression to string."""
-        return "!" + str(self.subexpression)
+        return "!({})".format(str(self.subexpression))
 
     def __eq__(self, other):
         """Check equality between two NotLabelExpressions."""
@@ -653,6 +653,21 @@ class HOAHeader:
 
         return s
 
+    def __eq__(self, other):
+        """Check equality between two HOA bodies."""
+        return isinstance(other, HOAHeader) \
+            and self.format_version == other.format_version \
+            and self.acceptance == other.acceptance \
+            and self.nb_states == other.nb_states \
+            and self.start_states == other.start_states \
+            and self.aliases == other.aliases \
+            and self.acceptance_name == other.acceptance_name \
+            and self.propositions == other.propositions \
+            and self.tool == other.tool \
+            and self.name == other.name \
+            and self.properties == other.properties \
+            and self.headernames == other.headernames
+
 
 class HOABody:
     """This class implements a data structure for the HOA file format header."""
@@ -673,6 +688,10 @@ class HOABody:
         """
         return "\n".join([state.to_hoa_repr() + "\n" + "\n".join(map(lambda x: x.to_hoa_repr(), edges))
                           for state, edges in self.state2edges.items()]) + "\n"
+
+    def __eq__(self, other):
+        """Check equality between two HOA bodies."""
+        return isinstance(other, HOABody) and self.state2edges == other.state2edges
 
 
 class HOA:
@@ -706,3 +725,7 @@ class HOA:
         header = self.header.dumps()
         body = self.body.dumps()
         return header + "--BODY--\n" + body + "--END--"
+
+    def __eq__(self, other):
+        """Check equality between two HOA bodies."""
+        return isinstance(other, HOA) and self.header == other.header and self.body == other.body

@@ -8,7 +8,7 @@ from collections import OrderedDict
 import pytest
 
 from hoa2dot.core import HOA, Acceptance, Atom, AtomType, And, TrueAcceptance, AliasLabelExpression, \
-    AtomLabelExpression, AndLabelExpression, NotLabelExpression, State, Edge, TrueLabelExpression
+    AtomLabelExpression, AndLabelExpression, NotLabelExpression, State, Edge, TrueLabelExpression, HOABody
 from hoa2dot.parsers import HOAParser
 
 from .conftest import TEST_ROOT_DIR
@@ -35,9 +35,8 @@ def test_parsing_is_deterministic(filepath):
     hoa_obj_1 = parser(open(filepath).read())  # type: HOA
     temp = tempfile.mktemp()
     hoa_obj_1.dump(open(temp, "w"))
-    # hoa_obj_2 = parser(open(temp).read())
-    # TODO equality check does not work yet
-    # assert hoa_obj_1 == hoa_obj_2
+    hoa_obj_2 = parser(open(temp).read())
+    assert hoa_obj_1 == hoa_obj_2
 
 
 class TestParsingAut1:
@@ -102,7 +101,7 @@ class TestParsingAut2:
     def setup_class(cls):
         """Set the test up."""
         parser = HOAParser()
-        cls.hoa_obj = parser(open(str(Path(TEST_ROOT_DIR, "examples", "aut2.hoa"))).read())  # type: HOA
+        cls.hoa_obj = parser(open(str(Path(TEST_ROOT_DIR, "examples", "aut3.2.hoa"))).read())  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
 
