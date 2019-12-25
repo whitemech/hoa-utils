@@ -266,7 +266,7 @@ class AndLabelExpression(LabelExpression):
         return isinstance(other, AndLabelExpression) and self.subexpressions == other.subexpressions
 
     def __hash__(self):
-        """Compute the hash of a AndLabelExpression."""
+        """Compute the hash of an AndLabelExpression."""
         return hash((AndLabelExpression, *self.subexpressions))
 
 
@@ -300,7 +300,7 @@ class OrLabelExpression(LabelExpression):
         return isinstance(other, OrLabelExpression) and self.subexpressions == other.subexpressions
 
     def __hash__(self):
-        """Compute the hash of a OrLabelExpression."""
+        """Compute the hash of an OrLabelExpression."""
         return hash((OrLabelExpression, *self.subexpressions))
 
 
@@ -329,7 +329,7 @@ class AtomLabelExpression(LabelExpression):
         return isinstance(other, AtomLabelExpression) and self.propositions == other.propositions
 
     def __hash__(self):
-        """Compute the hash of a AtomLabelExpression."""
+        """Compute the hash of an AtomLabelExpression."""
         return hash((AtomLabelExpression, self._proposition))
 
 
@@ -406,7 +406,7 @@ class AliasLabelExpression(LabelExpression):
             self.expression == other.expression
 
     def __hash__(self):
-        """Compute the hash of a AliasLabelExpression."""
+        """Compute the hash of an AliasLabelExpression."""
         return hash((AliasLabelExpression, self.alias))
 
 
@@ -490,10 +490,7 @@ class State:
 
     def __hash__(self):
         """Define hash for State."""
-        try:
-            return hash((self.index, self.label, self.name, self.name, self.acc_sig))
-        except TypeError:
-            pass
+        return hash((self.index, self.label, self.name, self.name, self.acc_sig))
 
 
 class Edge:
