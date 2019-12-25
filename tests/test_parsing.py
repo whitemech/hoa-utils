@@ -2,15 +2,14 @@
 """Test the parsing module."""
 import os
 import tempfile
-from pathlib import Path
 from collections import OrderedDict
+from pathlib import Path
 
 import pytest
 
 from hoa2dot.core import HOA, Acceptance, Atom, AtomType, And, TrueAcceptance, AliasLabelExpression, \
-    AtomLabelExpression, AndLabelExpression, NotLabelExpression, State, Edge, TrueLabelExpression, HOABody
+    AtomLabelExpression, AndLabelExpression, NotLabelExpression, State, Edge, TrueLabelExpression
 from hoa2dot.parsers import HOAParser
-
 from .conftest import TEST_ROOT_DIR
 
 
@@ -101,7 +100,7 @@ class TestParsingAut2:
     def setup_class(cls):
         """Set the test up."""
         parser = HOAParser()
-        cls.hoa_obj = parser(open(str(Path(TEST_ROOT_DIR, "examples", "aut3.2.hoa"))).read())  # type: HOA
+        cls.hoa_obj = parser(open(str(Path(TEST_ROOT_DIR, "examples", "aut2.hoa"))).read())  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
 
