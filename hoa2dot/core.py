@@ -645,7 +645,7 @@ class HOAHeader:
         if self.tool is not None:
             s += "tool: {}\n".format(" ".join(self.tool))
         if self.name is not None:
-            s += "name: {}\n".format(self.name)
+            s += "name: \"{}\"\n".format(self.name)
         if self.properties is not None and len(self.properties) > 0:
             s += "properties: {}\n".format(" ".join(self.properties))
         if self.headernames is not None and len(self.headernames) > 0:

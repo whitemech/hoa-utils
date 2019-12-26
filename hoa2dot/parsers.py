@@ -151,7 +151,7 @@ class HOATransformer(Transformer):
 
     def name(self, args):
         """Parse the 'nome' node."""
-        return HeaderItemType.NAME, args[0]
+        return HeaderItemType.NAME, args[0].strip('\"')
 
     def properties(self, args):
         """Parse the 'automaton' node."""
