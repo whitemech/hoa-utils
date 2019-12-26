@@ -727,5 +727,5 @@ class HOA:
         return header + "--BODY--\n" + body + "--END--"
 
     def __eq__(self, other):
-        """Check equality between two HOA bodies."""
+        """Check equality between two HOA automata."""
         return isinstance(other, HOA) and self.header == other.header and self.body == other.body
