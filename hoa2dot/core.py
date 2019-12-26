@@ -654,7 +654,7 @@ class HOAHeader:
         return s
 
     def __eq__(self, other):
-        """Check equality between two HOA bodies."""
+        """Check equality between two HOA headers."""
         return isinstance(other, HOAHeader) \
             and self.format_version == other.format_version \
             and self.acceptance == other.acceptance \
