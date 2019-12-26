@@ -2,15 +2,14 @@
 """Test the parsing module."""
 import os
 import tempfile
-from pathlib import Path
 from collections import OrderedDict
+from pathlib import Path
 
 import pytest
 
 from hoa2dot.core import HOA, Acceptance, Atom, AtomType, And, TrueAcceptance, AliasLabelExpression, \
     AtomLabelExpression, AndLabelExpression, NotLabelExpression, State, Edge, TrueLabelExpression
 from hoa2dot.parsers import HOAParser
-
 from .conftest import TEST_ROOT_DIR
 
 
@@ -35,9 +34,8 @@ def test_parsing_is_deterministic(filepath):
     hoa_obj_1 = parser(open(filepath).read())  # type: HOA
     temp = tempfile.mktemp()
     hoa_obj_1.dump(open(temp, "w"))
-    # hoa_obj_2 = parser(open(temp).read())
-    # TODO equality check does not work yet
-    # assert hoa_obj_1 == hoa_obj_2
+    hoa_obj_2 = parser(open(temp).read())
+    assert hoa_obj_1 == hoa_obj_2
 
 
 class TestParsingAut1:

@@ -34,23 +34,27 @@ label:  "[" label_expr "]"
 
 
 state_conj : INT | state_conj "&" INT
-label_expr : boolean_label_expr | atom_label_expr | alias_label_expr | not_label_expr
-           | "(" label_expr ")"
-           | and_label_expr
+label_expr : "(" label_expr ")"
            | or_label_expr
-or_label_expr.2: label_expr "|" label_expr
-and_label_expr.1: label_expr "&" label_expr
+           | and_label_expr
+           | not_label_expr
+           | atom_label_expr
+           | boolean_label_expr
+           | alias_label_expr
+
+or_label_expr: label_expr "|" label_expr
+and_label_expr: label_expr "&" label_expr
 not_label_expr: "!" label_expr
 alias_label_expr: ANAME
 atom_label_expr: INT
 boolean_label_expr: BOOLEAN
 
-acceptance_cond : atom_acceptance_cond
-                | not_acceptance_cond
-                | and_acceptance_cond
+acceptance_cond : "(" acceptance_cond ")"
                 | or_acceptance_cond
+                | and_acceptance_cond
+                | not_acceptance_cond
                 | boolean_acceptance_cond
-                | "(" acceptance_cond ")"
+                | atom_acceptance_cond
 or_acceptance_cond.2 : acceptance_cond "|" acceptance_cond
 and_acceptance_cond.1 : acceptance_cond "&" acceptance_cond
 not_acceptance_cond : IDENTIFIER "(" "!" INT ")"
