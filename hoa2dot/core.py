@@ -535,7 +535,7 @@ class HOAHeader:
                  start_states: Optional[List[int]] = None,
                  aliases: Optional[List[AliasLabelExpression]] = None,
                  acceptance_name: Optional[str] = None,
-                 propositions: Optional[Tuple[str]] = None,
+                 propositions: Optional[Tuple[str, ...]] = None,
                  tool: Optional[List[str]] = None,
                  name: Optional[str] = None,
                  properties: Optional[List[str]] = None,
@@ -598,7 +598,7 @@ class HOAHeader:
         return self._acceptance
 
     @property
-    def propositions(self) -> Optional[Tuple[str]]:
+    def propositions(self) -> Optional[Tuple[str, ...]]:
         """Get the 'propositions' property."""
         return self._propositions
 
@@ -645,7 +645,7 @@ class HOAHeader:
         if self.tool is not None:
             s += "tool: {}\n".format(" ".join(self.tool))
         if self.name is not None:
-            s += "name: {}\n".format(self.name)
+            s += "name: \"{}\"\n".format(self.name)
         if self.properties is not None and len(self.properties) > 0:
             s += "properties: {}\n".format(" ".join(self.properties))
         if self.headernames is not None and len(self.headernames) > 0:
@@ -727,5 +727,5 @@ class HOA:
         return header + "--BODY--\n" + body + "--END--"
 
     def __eq__(self, other):
-        """Check equality between two HOA bodies."""
+        """Check equality between two HOA automata."""
         return isinstance(other, HOA) and self.header == other.header and self.body == other.body
