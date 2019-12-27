@@ -535,7 +535,7 @@ class HOAHeader:
                  start_states: Optional[List[int]] = None,
                  aliases: Optional[List[AliasLabelExpression]] = None,
                  acceptance_name: Optional[str] = None,
-                 propositions: Optional[Tuple[str]] = None,
+                 propositions: Optional[Tuple[str, ...]] = None,
                  tool: Optional[List[str]] = None,
                  name: Optional[str] = None,
                  properties: Optional[List[str]] = None,
@@ -598,7 +598,7 @@ class HOAHeader:
         return self._acceptance
 
     @property
-    def propositions(self) -> Optional[Tuple[str]]:
+    def propositions(self) -> Optional[Tuple[str, ...]]:
         """Get the 'propositions' property."""
         return self._propositions
 
