@@ -10,4 +10,4 @@
 [![](https://img.shields.io/badge/mypy-checked-blue)](https://img.shields.io/badge/mypy-checked-blue)
 [![](https://img.shields.io/badge/license-MIT-lightgrey)](https://img.shields.io/badge/license-MIT-lightgrey)
 
-HOA format to Graphviz DOT translator (and vice versa)
+HOA format to Graphviz DOT translator.
