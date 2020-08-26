@@ -1,4 +1,28 @@
 # -*- coding: utf-8 -*-
+#
+# MIT License
+#
+# Copyright (c) 2020 Whitemech
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
 """This module contains the definition of the HOA parser."""
 
 import logging
@@ -11,9 +35,28 @@ from typing import Any, Dict, List
 
 from lark import Lark, Transformer, Tree
 
-from hoa2dot.core import TrueAcceptance, FalseAcceptance, And, Or, Not, AtomType, Atom, Acceptance, HOAHeader, \
-    AliasLabelExpression, OrLabelExpression, AndLabelExpression, NotLabelExpression, AtomLabelExpression, \
-    TrueLabelExpression, FalseLabelExpression, Edge, State, HOABody, HOA
+from hoa2dot.core import (
+    HOA,
+    Acceptance,
+    AliasLabelExpression,
+    And,
+    AndLabelExpression,
+    Atom,
+    AtomLabelExpression,
+    AtomType,
+    Edge,
+    FalseAcceptance,
+    FalseLabelExpression,
+    HOABody,
+    HOAHeader,
+    Not,
+    NotLabelExpression,
+    Or,
+    OrLabelExpression,
+    State,
+    TrueAcceptance,
+    TrueLabelExpression,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -86,13 +129,21 @@ class HOATransformer(Transformer):
 
         headertype2value = {}  # type: Dict[HeaderItemType, Any]
         for header_item_type, value in args[1:]:
-            if header_item_type in {HeaderItemType.ALIAS, HeaderItemType.START_STATES, HeaderItemType.PROPERTIES}:
-                headertype2value.setdefault(header_item_type, []).extend(value if isinstance(value, list) else [value])
+            if header_item_type in {
+                HeaderItemType.ALIAS,
+                HeaderItemType.START_STATES,
+                HeaderItemType.PROPERTIES,
+            }:
+                headertype2value.setdefault(header_item_type, []).extend(
+                    value if isinstance(value, list) else [value]
+                )
             else:
                 assert header_item_type not in headertype2value
                 headertype2value[header_item_type] = value
 
-        assert HeaderItemType.ACCEPTANCE in headertype2value, "'Acceptance:' must always be present."
+        assert (
+            HeaderItemType.ACCEPTANCE in headertype2value
+        ), "'Acceptance:' must always be present."
 
         return HOAHeader(
             format_version,
@@ -104,7 +155,8 @@ class HOATransformer(Transformer):
             propositions=headertype2value.get(HeaderItemType.PROPOSITIONS, None),
             tool=headertype2value.get(HeaderItemType.TOOL, None),
             name=headertype2value.get(HeaderItemType.NAME, None),
-            properties=headertype2value.get(HeaderItemType.PROPERTIES, None))
+            properties=headertype2value.get(HeaderItemType.PROPERTIES, None),
+        )
 
     def format_version(self, args):
         """Parse the 'format_version' node."""
@@ -151,7 +203,7 @@ class HOATransformer(Transformer):
 
     def name(self, args):
         """Parse the 'nome' node."""
-        return HeaderItemType.NAME, args[0].strip('\"')
+        return HeaderItemType.NAME, args[0].strip('"')
 
     def properties(self, args):
         """Parse the 'automaton' node."""
@@ -185,7 +237,7 @@ class HOATransformer(Transformer):
         if len(non_trees) == 1:
             return State(index=non_trees[0], **kwargs)
         elif len(non_trees) == 2:
-            return State(index=non_trees[0], name=non_trees[1].strip('\"'), **kwargs)
+            return State(index=non_trees[0], name=non_trees[1].strip('"'), **kwargs)
         else:
             raise ValueError("Should not be here.")
 
@@ -199,9 +251,15 @@ class HOATransformer(Transformer):
             if isinstance(first, Tree):
                 return Edge(second, label=first.children[0])
             else:
-                return Edge(first, acc_sig=frozenset(second.children))  # acc_sig as frozenset()
+                return Edge(
+                    first, acc_sig=frozenset(second.children)
+                )  # acc_sig as frozenset()
         elif len(args) == 3:
-            label, state_conj, acc_sig = args[0].children[0], args[1], frozenset(args[2].children)
+            label, state_conj, acc_sig = (
+                args[0].children[0],
+                args[1],
+                frozenset(args[2].children),
+            )
             return Edge(state_conj, label=label, acc_sig=acc_sig)
         else:
             raise ValueError("Should not be here.")
@@ -209,7 +267,11 @@ class HOATransformer(Transformer):
     def state_conj(self, args):
         """Parse the 'state_conj' node."""
         # compute the flat list
-        return list(reduce(operator.add, map(lambda x: [x] if not isinstance(x, list) else x, args)))
+        return list(
+            reduce(
+                operator.add, map(lambda x: [x] if not isinstance(x, list) else x, args)
+            )
+        )
 
     def label_expr(self, args):
         """Parse the 'label_expr' node."""
@@ -263,11 +325,25 @@ class HOATransformer(Transformer):
 
     def and_acceptance_cond(self, args):
         """Parse the 'and_acceptance_cond' node."""
-        return And(list(reduce(lambda x, y: x + y, map(lambda x: x.conditions if isinstance(x, And) else [x], args))))
+        return And(
+            list(
+                reduce(
+                    lambda x, y: x + y,
+                    map(lambda x: x.conditions if isinstance(x, And) else [x], args),
+                )
+            )
+        )
 
     def or_acceptance_cond(self, args):
         """Parse the 'or_acceptance_cond' node."""
-        return Or(list(reduce(lambda x, y: x + y, map(lambda x: x.conditions if isinstance(x, Or) else [x], args))))
+        return Or(
+            list(
+                reduce(
+                    lambda x, y: x + y,
+                    map(lambda x: x.conditions if isinstance(x, Or) else [x], args),
+                )
+            )
+        )
 
     def boolean_acceptance_cond(self, args):
         """Parse the 'boolean_acceptance_cond' node."""

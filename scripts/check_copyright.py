@@ -22,10 +22,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
 
+"""This script checks that all the Python files of the repository have the copyrigth notice.
 
-"""
-This script checks that all the Python files of the repository have:
+In particular
 - (optional) the Python shebang
 - the encoding header;
 - the copyright notice;
@@ -40,21 +41,21 @@ from pathlib import Path
 
 HEADER_REGEX = r"""(#!/usr/bin/env python3
 )?# -\*- coding: utf-8 -\*-
-# 
+#
 # MIT License
-# 
+#
 # Copyright \(c\) 2020 Whitemech
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files \(the "Software"\), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -62,7 +63,7 @@ HEADER_REGEX = r"""(#!/usr/bin/env python3
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""
+#"""
 
 
 def check_copyright(file: Path) -> bool:
@@ -95,12 +96,9 @@ if __name__ == "__main__":
         Path("hoa2dot").glob("**/*.py"),
         Path("tests").glob("**/*.py"),
         Path("scripts").glob("**/*.py"),
-        [Path("setup.py")],
     )
 
-    bad_files = [
-        filepath for filepath in python_files if not check_copyright(filepath)
-    ]
+    bad_files = [filepath for filepath in python_files if not check_copyright(filepath)]
 
     if len(bad_files) > 0:
         print("The following files are not well formatted:")

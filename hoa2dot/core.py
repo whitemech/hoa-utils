@@ -1,9 +1,33 @@
 # -*- coding: utf-8 -*-
+#
+# MIT License
+#
+# Copyright (c) 2020 Whitemech
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
 """This module contains the core definitions for the tool."""
 from abc import ABC, abstractmethod
 from enum import Enum
 from functools import reduce
-from typing import Optional, List, Set, Dict, Tuple, FrozenSet, TextIO
+from typing import Dict, FrozenSet, List, Optional, Set, TextIO, Tuple
 
 
 class AcceptanceCondition(ABC):
@@ -58,7 +82,9 @@ class And(AcceptanceCondition):
     @property
     def accepting_sets(self) -> Set[int]:
         """Get the set of accepting sets."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions))
+        return reduce(
+            lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions)
+        )
 
     def __str__(self):
         """Transform the And to string."""
@@ -88,7 +114,9 @@ class Or(AcceptanceCondition):
     @property
     def accepting_sets(self) -> Set[int]:
         """Get the set of accepting sets."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions))
+        return reduce(
+            lambda x, y: x.union(y), map(lambda x: x.accepting_sets, self.conditions)
+        )
 
     def __str__(self):
         """Transform the Or to string."""
@@ -133,8 +161,11 @@ class Atom(AcceptanceCondition):
 
     def __eq__(self, other):
         """Check equality between two Atoms."""
-        return isinstance(other, Atom) and self.accepting_set == other.accepting_set and \
-            self.atom_type == other.atom_type
+        return (
+            isinstance(other, Atom)
+            and self.accepting_set == other.accepting_set
+            and self.atom_type == other.atom_type
+        )
 
 
 class Not(Atom):
@@ -208,7 +239,9 @@ class Acceptance:
 
     def get_hoa_repr(self) -> str:
         """Get a compatible HOA format representation."""
-        return "Acceptance: {} {}".format(self.condition.nb_accepting_sets, str(self.condition))
+        return "Acceptance: {} {}".format(
+            self.condition.nb_accepting_sets, str(self.condition)
+        )
 
     def __eq__(self, other):
         """Check equality between two Acceptances."""
@@ -255,7 +288,9 @@ class AndLabelExpression(LabelExpression):
     @property
     def propositions(self) -> Set[str]:
         """Get the set of all propositions."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
+        return reduce(
+            lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions)
+        )
 
     def __str__(self):
         """Transform the AndLabelExpression to string."""
@@ -263,7 +298,10 @@ class AndLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two AndLabelExpressions."""
-        return isinstance(other, AndLabelExpression) and self.subexpressions == other.subexpressions
+        return (
+            isinstance(other, AndLabelExpression)
+            and self.subexpressions == other.subexpressions
+        )
 
     def __hash__(self):
         """Compute the hash of an AndLabelExpression."""
@@ -289,7 +327,9 @@ class OrLabelExpression(LabelExpression):
     @property
     def propositions(self) -> Set[str]:
         """Get the set of all propositions."""
-        return reduce(lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions))
+        return reduce(
+            lambda x, y: x.union(y), map(lambda x: x.propositions, self.subexpressions)
+        )
 
     def __str__(self):
         """Transform the OrLabelExpression to string."""
@@ -297,7 +337,10 @@ class OrLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two OrLabelExpressions."""
-        return isinstance(other, OrLabelExpression) and self.subexpressions == other.subexpressions
+        return (
+            isinstance(other, OrLabelExpression)
+            and self.subexpressions == other.subexpressions
+        )
 
     def __hash__(self):
         """Compute the hash of an OrLabelExpression."""
@@ -326,7 +369,10 @@ class AtomLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two AtomLabelExpressions."""
-        return isinstance(other, AtomLabelExpression) and self.propositions == other.propositions
+        return (
+            isinstance(other, AtomLabelExpression)
+            and self.propositions == other.propositions
+        )
 
     def __hash__(self):
         """Compute the hash of an AtomLabelExpression."""
@@ -360,7 +406,10 @@ class NotLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two NotLabelExpressions."""
-        return isinstance(other, NotLabelExpression) and self.subexpression == other.subexpression
+        return (
+            isinstance(other, NotLabelExpression)
+            and self.subexpression == other.subexpression
+        )
 
     def __hash__(self):
         """Compute the hash of a NotLabelExpression."""
@@ -402,8 +451,11 @@ class AliasLabelExpression(LabelExpression):
 
     def __eq__(self, other):
         """Check equality between two AliasLabelExpressions."""
-        return isinstance(other, AliasLabelExpression) and self.alias == other.alias and \
-            self.expression == other.expression
+        return (
+            isinstance(other, AliasLabelExpression)
+            and self.alias == other.alias
+            and self.expression == other.expression
+        )
 
     def __hash__(self):
         """Compute the hash of an AliasLabelExpression."""
@@ -428,7 +480,7 @@ class TrueLabelExpression(LabelExpression):
 
     def __hash__(self):
         """Compute the hash of a TrueLabelExpression."""
-        return hash((TrueLabelExpression, ))
+        return hash((TrueLabelExpression,))
 
 
 class FalseLabelExpression(LabelExpression):
@@ -449,14 +501,19 @@ class FalseLabelExpression(LabelExpression):
 
     def __hash__(self):
         """Compute the hash of a FalseLabelExpression."""
-        return hash((FalseLabelExpression, ))
+        return hash((FalseLabelExpression,))
 
 
 class State:
     """This class represents a state of the automaton."""
 
-    def __init__(self, index: int, label: Optional[LabelExpression] = None, name: Optional[str] = None,
-                 acc_sig: Optional[FrozenSet[int]] = None):
+    def __init__(
+        self,
+        index: int,
+        label: Optional[LabelExpression] = None,
+        name: Optional[str] = None,
+        acc_sig: Optional[FrozenSet[int]] = None,
+    ):
         """
         Initialize a State.
 
@@ -478,15 +535,20 @@ class State:
             s += "[" + str(self.label) + "]" + " "
         s += str(self.index) + " "
         if self.name is not None:
-            s += '\"' + self.name + '\"' + " "
+            s += '"' + self.name + '"' + " "
         if self.acc_sig is not None:
             s += "{" + " ".join(map(str, self.acc_sig)) + "}"
         return s
 
     def __eq__(self, other):
         """Check equality between two States."""
-        return isinstance(other, State) and self.index == other.index and self.label == other.label and \
-            self.name == other.name and self.acc_sig == other.acc_sig
+        return (
+            isinstance(other, State)
+            and self.index == other.index
+            and self.label == other.label
+            and self.name == other.name
+            and self.acc_sig == other.acc_sig
+        )
 
     def __hash__(self):
         """Define hash for State."""
@@ -496,8 +558,12 @@ class State:
 class Edge:
     """This class represents an edge in the automaton."""
 
-    def __init__(self, state_conj: List[int], label: Optional[LabelExpression] = None,
-                 acc_sig: Optional[FrozenSet[int]] = None):
+    def __init__(
+        self,
+        state_conj: List[int],
+        label: Optional[LabelExpression] = None,
+        acc_sig: Optional[FrozenSet[int]] = None,
+    ):
         """
         Initialize an edge.
 
@@ -521,25 +587,31 @@ class Edge:
 
     def __eq__(self, other):
         """Check equality between two Edges."""
-        return isinstance(other, Edge) and self.state_conj == other.state_conj and self.label == other.label and \
-            self.acc_sig == other.acc_sig
+        return (
+            isinstance(other, Edge)
+            and self.state_conj == other.state_conj
+            and self.label == other.label
+            and self.acc_sig == other.acc_sig
+        )
 
 
 class HOAHeader:
     """This class implements a data structure for the HOA file format header."""
 
-    def __init__(self,
-                 format_version: str,
-                 acceptance: Acceptance,
-                 nb_states: Optional[int] = None,
-                 start_states: Optional[List[int]] = None,
-                 aliases: Optional[List[AliasLabelExpression]] = None,
-                 acceptance_name: Optional[str] = None,
-                 propositions: Optional[Tuple[str, ...]] = None,
-                 tool: Optional[List[str]] = None,
-                 name: Optional[str] = None,
-                 properties: Optional[List[str]] = None,
-                 headernames: Optional[Dict[str, List[str]]] = None):
+    def __init__(
+        self,
+        format_version: str,
+        acceptance: Acceptance,
+        nb_states: Optional[int] = None,
+        start_states: Optional[List[int]] = None,
+        aliases: Optional[List[AliasLabelExpression]] = None,
+        acceptance_name: Optional[str] = None,
+        propositions: Optional[Tuple[str, ...]] = None,
+        tool: Optional[List[str]] = None,
+        name: Optional[str] = None,
+        properties: Optional[List[str]] = None,
+        headernames: Optional[Dict[str, List[str]]] = None,
+    ):
         """
         Initialize a HOA header.
 
@@ -635,38 +707,59 @@ class HOAHeader:
             s += "\n".join("Start: {}".format(idx) for idx in self.start_states) + "\n"
         if self.propositions is not None and len(self.propositions) > 0:
             propositions_string = '"' + '" "'.join(p for p in self.propositions) + '"'
-            s += "AP: {nb} {prop}\n".format(nb=len(self.propositions), prop=propositions_string)
+            s += "AP: {nb} {prop}\n".format(
+                nb=len(self.propositions), prop=propositions_string
+            )
         if self.aliases is not None and len(self.aliases) > 0:
-            s += "\n".join(["Alias: {} {}".format(alias_label.alias, str(alias_label.expression))
-                            for alias_label in self.aliases]) + "\n"
+            s += (
+                "\n".join(
+                    [
+                        "Alias: {} {}".format(
+                            alias_label.alias, str(alias_label.expression)
+                        )
+                        for alias_label in self.aliases
+                    ]
+                )
+                + "\n"
+            )
         if self.acceptance_name is not None:
             s += "acc-name: {}\n".format(self.acceptance_name)
         s += self.acceptance.get_hoa_repr() + "\n"
         if self.tool is not None:
             s += "tool: {}\n".format(" ".join(self.tool))
         if self.name is not None:
-            s += "name: \"{}\"\n".format(self.name)
+            s += 'name: "{}"\n'.format(self.name)
         if self.properties is not None and len(self.properties) > 0:
             s += "properties: {}\n".format(" ".join(self.properties))
         if self.headernames is not None and len(self.headernames) > 0:
-            s += "\n".join(["{}: {}".format(key, " ".join(values)) for key, values in self.headernames.items()]) + "\n"
+            s += (
+                "\n".join(
+                    [
+                        "{}: {}".format(key, " ".join(values))
+                        for key, values in self.headernames.items()
+                    ]
+                )
+                + "\n"
+            )
 
         return s
 
     def __eq__(self, other):
         """Check equality between two HOA headers."""
-        return isinstance(other, HOAHeader) \
-            and self.format_version == other.format_version \
-            and self.acceptance == other.acceptance \
-            and self.nb_states == other.nb_states \
-            and self.start_states == other.start_states \
-            and self.aliases == other.aliases \
-            and self.acceptance_name == other.acceptance_name \
-            and self.propositions == other.propositions \
-            and self.tool == other.tool \
-            and self.name == other.name \
-            and self.properties == other.properties \
+        return (
+            isinstance(other, HOAHeader)
+            and self.format_version == other.format_version
+            and self.acceptance == other.acceptance
+            and self.nb_states == other.nb_states
+            and self.start_states == other.start_states
+            and self.aliases == other.aliases
+            and self.acceptance_name == other.acceptance_name
+            and self.propositions == other.propositions
+            and self.tool == other.tool
+            and self.name == other.name
+            and self.properties == other.properties
             and self.headernames == other.headernames
+        )
 
 
 class HOABody:
@@ -686,8 +779,17 @@ class HOABody:
 
         :return: the body string in HOA format.
         """
-        return "\n".join([state.to_hoa_repr() + "\n" + "\n".join(map(lambda x: x.to_hoa_repr(), edges))
-                          for state, edges in self.state2edges.items()]) + "\n"
+        return (
+            "\n".join(
+                [
+                    state.to_hoa_repr()
+                    + "\n"
+                    + "\n".join(map(lambda x: x.to_hoa_repr(), edges))
+                    for state, edges in self.state2edges.items()
+                ]
+            )
+            + "\n"
+        )
 
     def __eq__(self, other):
         """Check equality between two HOA bodies."""
@@ -728,4 +830,8 @@ class HOA:
 
     def __eq__(self, other):
         """Check equality between two HOA automata."""
-        return isinstance(other, HOA) and self.header == other.header and self.body == other.body
+        return (
+            isinstance(other, HOA)
+            and self.header == other.header
+            and self.body == other.body
+        )
