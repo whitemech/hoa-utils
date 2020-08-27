@@ -11,9 +11,7 @@ documentation = "https://whitemech.github.io/hoa2dot"
 keywords = [
     "HOA",
     "automata",
-    "DOT",
-    "Graphviz",
-    "DFA"
+    "HOA-format",
 ]
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
@@ -21,8 +19,8 @@ classifiers = [
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
 ]
 packages = [
     { include = "hoa2dot" },
@@ -54,7 +52,7 @@ flake8 = "^3.8.3"
 flake8-docstrings = "^1.5.0"
 flake8-bugbear = "^20.1.4"
 flake8-eradicate = "^0.4.0"
-#flake8-import-order = "^0.18.1" TODO: reintroduce
+flake8-isort = "^4.0.0"
 pylint = "^2.6.0"
 safety = "^1.9.0"
 vulture = "^2.1"

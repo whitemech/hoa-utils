@@ -23,6 +23,23 @@
 # SOFTWARE.
 #
 
-"""Test the hoa2dot tool."""
+from hoa2dot.ast.boolean_expression import And, Not, Or
+from hoa2dot.ast.label import LabelAlias, LabelAtom, propositions
 
-# class TestCli
+
+def test_propositions():
+    """Test the accepting sets."""
+    a = LabelAtom("a")
+    b = LabelAtom("b")
+    a_and_b = a & b
+    c = LabelAtom("c")
+    d = LabelAlias("d", a & b)
+
+    or_ = c | d
+    not_ = ~or_
+
+    assert isinstance(a_and_b, And)
+    assert isinstance(or_, Or)
+    assert isinstance(not_, Not)
+
+    assert propositions(not_) == {"a", "b", "c"}

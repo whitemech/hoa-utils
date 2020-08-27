@@ -22,7 +22,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+from functools import singledispatch
 
-"""Test the hoa2dot tool."""
+from hoa2dot.ast.acceptance import AcceptanceAtom, AcceptanceCondition
+from hoa2dot.ast.boolean_expression import BinaryOp, UnaryOp
 
-# class TestCli
+
+@singledispatch
+def acceptance_condition_to_string(_: AcceptanceCondition):
+    return str(_)
+
+
+@acceptance_condition_to_string.register
+def _(f: AcceptanceAtom):
+    return f"{f.atom_type}({f.acceptance_set})"
+
+
+@acceptance_condition_to_string.register
+def _(f: BinaryOp):
+    return "(" + f" {f.SYMBOL} ".join(map(str, f.operands)) + ")"
+
+
+@acceptance_condition_to_string.register
+def _(f: UnaryOp):
+    return f.SYMBOL.join(map(str, f.operands))

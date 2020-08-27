@@ -23,6 +23,25 @@
 # SOFTWARE.
 #
 
-"""Test the hoa2dot tool."""
+from hoa2dot.ast.acceptance import Acceptance, accepting_sets, Fin, Inf
+from hoa2dot.ast.boolean_expression import PositiveAnd, PositiveOr
 
-# class TestCli
+
+def test_accepting_sets():
+    """Test the accepting sets."""
+    fin0 = Fin(0)
+    inf1 = Inf(1)
+
+    and_ = fin0 & ~inf1
+    or_ = fin0 | and_
+
+    assert isinstance(and_, PositiveAnd)
+    assert isinstance(or_, PositiveOr)
+
+    assert accepting_sets(or_) == {0, 1}
+
+
+def test_acceptance():
+    """Test Acceptance instantiation."""
+    fin0 = Fin(0)
+    Acceptance(fin0, name="fin 0")

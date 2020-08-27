@@ -22,7 +22,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
-"""Test the hoa2dot tool."""
-
-# class TestCli
+"""This package contains utilities for the AST of an HOA."""

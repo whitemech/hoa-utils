@@ -603,7 +603,7 @@ class HOAHeader:
         format_version: str,
         acceptance: Acceptance,
         nb_states: Optional[int] = None,
-        start_states: Optional[List[int]] = None,
+        start_states: Optional[List[List[int]]] = None,
         aliases: Optional[List[AliasLabelExpression]] = None,
         acceptance_name: Optional[str] = None,
         propositions: Optional[Tuple[str, ...]] = None,
@@ -650,7 +650,7 @@ class HOAHeader:
         return self._nb_states
 
     @property
-    def start_states(self) -> Optional[List[int]]:
+    def start_states(self) -> Optional[List[List[int]]]:
         """Get the 'start_state' property."""
         return self._start_states
 

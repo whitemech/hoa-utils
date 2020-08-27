@@ -36,7 +36,6 @@ from typing import Any, Dict, List
 from lark import Lark, Transformer, Tree
 
 from hoa2dot.core import (
-    HOA,
     Acceptance,
     AliasLabelExpression,
     And,
@@ -47,6 +46,7 @@ from hoa2dot.core import (
     Edge,
     FalseAcceptance,
     FalseLabelExpression,
+    HOA,
     HOABody,
     HOAHeader,
     Not,
@@ -127,16 +127,17 @@ class HOATransformer(Transformer):
         format_version = args[0]
         assert isinstance(format_version, str), "The first item should be the version."
 
-        headertype2value = {}  # type: Dict[HeaderItemType, Any]
+        headertype2value: Dict[HeaderItemType, Any] = {}
         for header_item_type, value in args[1:]:
             if header_item_type in {
                 HeaderItemType.ALIAS,
-                HeaderItemType.START_STATES,
                 HeaderItemType.PROPERTIES,
             }:
                 headertype2value.setdefault(header_item_type, []).extend(
                     value if isinstance(value, list) else [value]
                 )
+            elif header_item_type == HeaderItemType.START_STATES:
+                headertype2value.setdefault(header_item_type, []).append(value)
             else:
                 assert header_item_type not in headertype2value
                 headertype2value[header_item_type] = value

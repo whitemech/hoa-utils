@@ -27,12 +27,12 @@
 import os
 import tempfile
 from collections import OrderedDict
+from io import StringIO
 from pathlib import Path
 
 import pytest
 
 from hoa2dot.core import (
-    HOA,
     Acceptance,
     AliasLabelExpression,
     And,
@@ -41,6 +41,7 @@ from hoa2dot.core import (
     AtomLabelExpression,
     AtomType,
     Edge,
+    HOA,
     HOABody,
     HOAHeader,
     NotLabelExpression,
@@ -72,9 +73,10 @@ def test_parsing_is_deterministic(filepath):
     """Test that parsing is deterministic."""
     parser = HOAParser()
     hoa_obj_1 = parser(open(filepath).read())  # type: HOA
-    temp = tempfile.mktemp()
-    hoa_obj_1.dump(open(temp, "w"))
-    hoa_obj_2 = parser(open(temp).read())
+    temp = StringIO()
+    hoa_obj_1.dump(temp)
+    temp.seek(0)
+    hoa_obj_2 = parser(temp.read())
     assert hoa_obj_1 == hoa_obj_2
 
 
@@ -86,7 +88,7 @@ class TestParsingAut1:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut1.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut1.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -158,7 +160,7 @@ class TestParsingAut2:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut2.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut2.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -225,7 +227,7 @@ class TestParsingAut3:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut3.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut3.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -264,7 +266,7 @@ class TestParsingAut3_2:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut3.2.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut3.2.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -335,7 +337,7 @@ class TestParsingAut4:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut4.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut4.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -415,7 +417,7 @@ class TestParsingAut5:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut5.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut5.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -454,7 +456,7 @@ class TestParsingAut6:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut6.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut6.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -501,7 +503,7 @@ class TestParsingAut7:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut7.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut7.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -579,7 +581,7 @@ class TestParsingAut8:
         """Set the test up."""
         parser = HOAParser()
         cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut8.hoa"))).read()
+            Path(TEST_ROOT_DIR, "examples", "aut8.hoa").read_text()
         )  # type: HOA
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
@@ -654,15 +656,15 @@ class TestParsingAut8:
 
 
 class TestParsingAut11:
-    """Test parsing for tests/examples/aut8."""
+    """Test parsing for tests/examples/aut11."""
 
     @classmethod
     def setup_class(cls):
         """Set the test up."""
         parser = HOAParser()
-        cls.hoa_obj = parser(
-            open(str(Path(TEST_ROOT_DIR, "examples", "aut11.hoa"))).read()
-        )  # type: HOA
+        cls.hoa_obj: HOA = parser(
+            Path(TEST_ROOT_DIR, "examples", "aut11.hoa").read_text()
+        )
         cls.hoa_header = cls.hoa_obj.header
         cls.hoa_body = cls.hoa_obj.body
 
@@ -672,7 +674,7 @@ class TestParsingAut11:
             "v1",
             Acceptance(Atom(0, AtomType.FINITE)),
             nb_states=4,
-            start_states=[0, 2, 3],
+            start_states=[[0, 2], 3],
             acceptance_name="co-Buchi",
             propositions=("a", "b", "c"),
             name="(Fa & G(b&Xc)) | c",
