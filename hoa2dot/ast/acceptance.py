@@ -26,7 +26,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from functools import reduce, singledispatch
-from typing import Optional, Set, Union
+from typing import Optional, Sequence, Set, Tuple, Union
 
 from hoa2dot.ast.boolean_expression import (
     And,
@@ -40,6 +40,7 @@ from hoa2dot.ast.boolean_expression import (
     TrueFormula,
     UnaryOp,
 )
+from hoa2dot.types import acceptance_parameter, ACCEPTANCE_PARAMETER, identifier
 
 
 class AtomType(Enum):
@@ -56,6 +57,7 @@ class AtomType(Enum):
 @boolean_op_wrapper(
     and_=PositiveAnd["AcceptanceCondition"],
     or_=PositiveOr["AcceptanceCondition"],
+    not_=None,
 )
 @dataclass(order=True, unsafe_hash=True, frozen=True)
 class AcceptanceAtom:
@@ -133,4 +135,5 @@ class Acceptance:
     """This class represents the acceptance in the HOA format."""
 
     condition: AcceptanceCondition
-    name: Optional[str] = None
+    name: Optional[identifier] = None
+    parameters: Optional[Tuple[ACCEPTANCE_PARAMETER, ...]] = None

@@ -26,6 +26,7 @@ from functools import singledispatch
 
 from hoa2dot.ast.acceptance import AcceptanceAtom, AcceptanceCondition
 from hoa2dot.ast.boolean_expression import BinaryOp, UnaryOp
+from hoa2dot.ast.label import LabelAlias, LabelAtom, LabelExpression
 
 
 @singledispatch
@@ -35,14 +36,38 @@ def acceptance_condition_to_string(_: AcceptanceCondition):
 
 @acceptance_condition_to_string.register
 def _(f: AcceptanceAtom):
-    return f"{f.atom_type}({f.acceptance_set})"
+    return f"{f.atom_type.value}({'!' if f.negated else ''}{f.acceptance_set})"
 
 
 @acceptance_condition_to_string.register
 def _(f: BinaryOp):
-    return "(" + f" {f.SYMBOL} ".join(map(str, f.operands)) + ")"
+    return (
+        "("
+        + f" {f.SYMBOL} ".join(map(acceptance_condition_to_string, f.operands))
+        + ")"
+    )
 
 
-@acceptance_condition_to_string.register
+@singledispatch
+def label_expression_to_string(_: LabelExpression):
+    return str(_)
+
+
+@label_expression_to_string.register
+def _(f: LabelAtom):
+    return f"{f.proposition}"
+
+
+@label_expression_to_string.register
+def _(f: LabelAlias):
+    return f"@{f.alias}"
+
+
+@label_expression_to_string.register
+def _(f: BinaryOp):
+    return "(" + f" {f.SYMBOL} ".join(map(label_expression_to_string, f.operands)) + ")"
+
+
+@label_expression_to_string.register
 def _(f: UnaryOp):
-    return f.SYMBOL.join(map(str, f.operands))
+    return f"({f.SYMBOL}{label_expression_to_string(f.argument)})"

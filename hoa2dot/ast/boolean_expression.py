@@ -152,9 +152,9 @@ class _Not(UnaryOp, Generic[T]):
 def boolean_op_wrapper(
     _cls=None,
     *,
-    and_: Type[BinaryOp] = _And,
-    or_: Type[BinaryOp] = _Or,
-    not_: Type[BinaryOp] = _Not,
+    and_: Optional[Type[BinaryOp]] = _And,
+    or_: Optional[Type[BinaryOp]] = _Or,
+    not_: Optional[Type[BinaryOp]] = _Not,
 ):
     """
     Provide the atom class with __and__, __or__ and __not__ dunder methods.

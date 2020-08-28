@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+import re
 from pathlib import Path
 from typing import AbstractSet, Any, Callable, Collection, Optional, Sequence
 
@@ -34,7 +35,7 @@ def _get_current_path() -> Path:
     return Path(os.path.dirname(inspect.getfile(inspect.currentframe())))  # type: ignore
 
 
-def _assert(condition: bool, message: str = ""):
+def assert_(condition: bool, message: str = ""):
     """User-defined assert."""
     if not condition:
         raise AssertionError(message)
@@ -80,3 +81,39 @@ def safe_index(seq: Sequence, *args, **kwargs):
 def safe_get(seq: Sequence, index: int, default=None):
     """Get element at index, safe."""
     return seq[index] if index < len(seq) else default
+
+
+class RegexConstrainedString(str):
+    """
+    A string that is constrained by a regex.
+
+    The default behaviour is to match anything.
+    Subclass this class and change the 'REGEX' class
+    attribute to implement a different behaviour.
+    """
+
+    REGEX = re.compile(".*", flags=re.DOTALL)
+
+    def __new__(cls, value, *args, **kwargs):
+        """Instantiate a new object."""
+        if type(value) == cls:
+            return value
+        else:
+            inst = super(RegexConstrainedString, cls).__new__(cls, value)
+            return inst
+
+    def __init__(self, *_, **__):
+        """Initialize a regex constrained string."""
+        super().__init__()
+        if not self.REGEX.match(self):
+            self._handle_no_match()
+
+    def _handle_no_match(self):
+        raise ValueError(
+            "Value '{data}' does not match the regular expression {regex}".format(
+                data=self, regex=self.REGEX
+            )
+        )
+
+    def __instancecheck__(self, instance):
+        return isinstance(instance, str) and self.REGEX.match(instance)

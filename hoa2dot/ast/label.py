@@ -25,7 +25,7 @@
 """This module contains the definitions of acceptance atoms."""
 from dataclasses import dataclass
 from functools import reduce, singledispatch
-from typing import Set, Union
+from typing import Optional, Set, Union
 
 from hoa2dot.ast.boolean_expression import (
     And,
@@ -37,6 +37,7 @@ from hoa2dot.ast.boolean_expression import (
     TrueFormula,
     UnaryOp,
 )
+from hoa2dot.types import alias as alias_type
 
 
 @boolean_op_wrapper(
@@ -46,15 +47,18 @@ from hoa2dot.ast.boolean_expression import (
 class LabelAtom:
     """Implement the label atom."""
 
-    proposition: str
+    proposition: int
 
 
+@boolean_op_wrapper(
+    and_=And["LabelExpression"], or_=Or["LabelExpression"], not_=Not["LabelExpression"]
+)
 @dataclass(order=True, unsafe_hash=True, frozen=True)
 class LabelAlias:
     """Implement the label alias."""
 
-    alias: str
-    expression: "LabelExpression"
+    alias: alias_type
+    expression: Optional["LabelExpression"] = None
 
 
 LabelExpression = Union[
