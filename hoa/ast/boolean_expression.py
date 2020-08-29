@@ -195,17 +195,6 @@ PositiveAnd = boolean_op_wrapper(_cls=_PositiveAnd, and_=_PositiveAnd, or_=_Posi
 PositiveOr = boolean_op_wrapper(_cls=_PositiveOr, and_=_PositiveAnd, or_=_PositiveOr)
 
 
-def ensure_formula(f: Optional[T], is_none_true: bool) -> T:
-    """
-    Ensure the argument is a formula.
-
-    :param f: the formula, or None.
-    :param is_none_true: if true, None reduces to TrueFormula; FalseFormula otherwise.
-    :return: the same set, or an empty set if the arg was None.
-    """
-    return f if f is not None else TrueFormula() if is_none_true else FalseFormula()
-
-
 def _simplify_monotone_op_operands(cls, *operands):
     operands = list(dict.fromkeys(operands))
     if len(operands) == 0:

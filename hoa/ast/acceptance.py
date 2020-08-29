@@ -75,7 +75,14 @@ def Fin(acceptance_set: int):
 
 
 def NotFin(acceptance_set: int):
-    """Return the acceptance atom with finite acceptance negated'."""
+    """
+    Return the acceptance atom with finite acceptance negated'.
+
+    >>> not_fin0 = NotFin(0)
+    >>> fin0 = Fin(0)
+    >>> not_fin0 == ~fin0
+    True
+    """
     return ~Fin(acceptance_set)
 
 
@@ -85,7 +92,14 @@ def Inf(acceptance_set: int):
 
 
 def NotInf(acceptance_set: int):
-    """Return the acceptance atom with infinite acceptance negated."""
+    """
+    Return the acceptance atom with infinite acceptance negated.
+
+    >>> not_inf0 = NotInf(0)
+    >>> inf0 = Inf(0)
+    >>> not_inf0 == ~inf0
+    True
+    """
     return ~Inf(acceptance_set)
 
 

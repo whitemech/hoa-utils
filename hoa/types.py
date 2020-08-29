@@ -97,7 +97,7 @@ class hoa_header_value(RegexConstrainedString):
     """
 
     REGEX = re.compile(
-        f"({boolean.REGEX}|{integer.REGEX}|{string.REGEX}|{identifier.REGEX})"
+        f"({boolean.REGEX.pattern}|{integer.REGEX.pattern}|{string.REGEX.pattern}|{identifier.REGEX.pattern})"
     )
 
     @staticmethod
@@ -155,7 +155,9 @@ class acceptance_parameter(RegexConstrainedString):
     It must match (IDENTIFIER | INT)
     """
 
-    REGEX = re.compile(f"({boolean.REGEX}|{identifier.REGEX}|{integer.REGEX})")
+    REGEX = re.compile(
+        f"({boolean.REGEX.pattern}|{identifier.REGEX.pattern}|{integer.REGEX.pattern})"
+    )
 
     @staticmethod
     def to_parameter_value(s: "hoa_header_value") -> "ACCEPTANCE_PARAMETER":

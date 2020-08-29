@@ -25,14 +25,13 @@
 
 """This module contains the definition of the HOA parser."""
 
-import logging
 import operator
 import os
 from collections import OrderedDict
 from enum import Enum
 from functools import reduce
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from lark import Lark, Transformer, Tree
 
@@ -53,8 +52,6 @@ from hoa.types import (
     identifier,
     string,
 )
-
-logger = logging.getLogger(__name__)
 
 
 class HeaderItemType(Enum):
@@ -79,7 +76,6 @@ class HOATransformer(Transformer):
         """Initialize the transformer."""
         super().__init__(visit_tokens=True)
 
-        self._headernames: Set[HeaderItemType] = set()
         self._aliases: Dict[str, LabelExpression] = dict()
 
     INT = int

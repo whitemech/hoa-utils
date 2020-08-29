@@ -26,14 +26,28 @@
 """Test the pyhoafparser tool."""
 
 import tempfile
+from io import StringIO
 from pathlib import Path
+from unittest import mock
+from unittest.mock import MagicMock
 
 import pytest
 from click.testing import CliRunner
 
+from hoa.dumpers import dump
 from hoa.tools.pyhoafparser import main
 from tests.conftest import HOA_FILES
 from tests.test_utils import cd
+
+
+@mock.patch("hoa.dumpers.dumps", return_value="example")
+def test_dump(*_mocks):
+    """Test the dump method."""
+    hoa_object = MagicMock()
+    fp = StringIO()
+    dump(hoa_object, fp)
+    fp.seek(0)
+    assert fp.read() == "example"
 
 
 @pytest.mark.parametrize(

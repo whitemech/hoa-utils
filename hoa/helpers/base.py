@@ -26,64 +26,12 @@
 """This module contains helper functions."""
 
 import re
-from pathlib import Path
-from typing import AbstractSet, Any, Callable, Collection, Optional, Sequence
-
-
-def _get_current_path() -> Path:
-    """Get the new_dir to the file where the function is called."""
-    import inspect
-    import os
-
-    return Path(os.path.dirname(inspect.getfile(inspect.currentframe())))  # type: ignore
 
 
 def assert_(condition: bool, message: str = ""):
     """User-defined assert."""
     if not condition:
         raise AssertionError(message)
-
-
-def ensure(arg: Optional[Any], default: Any):
-    """Ensure an object is not None, or return a default."""
-    return arg if arg is not None else default
-
-
-def ensure_set(arg: Optional[Collection], immutable: bool = True) -> AbstractSet:
-    """
-    Ensure the argument is a set.
-
-    :param arg: the set, or None.
-    :param immutable: whether the collection should be immutable.
-    :return: the same set, or an empty set if the arg was None.
-    """
-    op = frozenset if immutable else set
-    return op(arg) if arg is not None else op()
-
-
-def ensure_sequence(arg: Optional[Sequence], immutable: bool = True) -> Sequence:
-    """
-    Ensure the argument is a sequence.
-
-    :param arg: the list, or None.
-    :param immutable: whether the collection should be immutable.
-    :return: the same list, or an empty list if the arg was None.
-    """
-    op: Callable = tuple if immutable else list
-    return op(arg) if arg is not None else op()
-
-
-def safe_index(seq: Sequence, *args, **kwargs):
-    """Find element, safe."""
-    try:
-        return seq.index(*args, **kwargs)
-    except ValueError:
-        return None
-
-
-def safe_get(seq: Sequence, index: int, default=None):
-    """Get element at index, safe."""
-    return seq[index] if index < len(seq) else default
 
 
 class RegexConstrainedString(str):

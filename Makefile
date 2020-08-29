@@ -87,7 +87,7 @@ pylint: ## run pylint
 	pylint hoa tests scripts
 
 vulture: ## run vulture
-	vulture
+	vulture hoa scripts/whitelist.py
 
 test: ## run tests quickly with the default Python
 	pytest tests --doctest-modules \

@@ -30,6 +30,7 @@ from typing import TextIO
 from hoa.ast.acceptance import nb_accepting_sets
 from hoa.core import Edge, HOA, HOABody, HOAHeader, State
 from hoa.printers import acceptance_condition_to_string, label_expression_to_string
+from hoa.types import acceptance_parameter, hoa_header_value
 
 
 def dump(hoa: HOA, fp: TextIO) -> None:
@@ -110,7 +111,12 @@ def _(hoa_header: HOAHeader):
     if hoa_header.acceptance.name is not None:
         s += "acc-name: {} {}\n".format(
             hoa_header.acceptance.name,
-            " ".join(map(str, hoa_header.acceptance.parameters)),
+            " ".join(
+                map(
+                    acceptance_parameter.to_acceptance_parameter,
+                    hoa_header.acceptance.parameters,
+                )
+            ),
         )
     if hoa_header.tool is not None:
         s += "tool: {}\n".format(" ".join(hoa_header.tool))
@@ -122,7 +128,9 @@ def _(hoa_header: HOAHeader):
         s += (
             "\n".join(
                 [
-                    "{}: {}".format(key, " ".join(values))
+                    "{}: {}".format(
+                        key, " ".join(map(hoa_header_value.to_hoa_header_value, values))
+                    )
                     for key, values in hoa_header.headernames.items()
                 ]
             )
