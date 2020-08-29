@@ -1,0 +1,74 @@
+start: automaton
+automaton : header "--BODY--" body "--END--"
+
+header : format_version header_item*
+format_version : "HOA:" IDENTIFIER
+header_item : num_states
+            | start_state
+            | propositions
+            | alias
+            | acceptance
+            | acc_name
+            | tool
+            | name
+            | properties
+            | headername
+num_states: "States:" INT
+start_state: "Start:" state_conj
+propositions: "AP:" INT STRING*
+alias: "Alias:" ANAME label_expr
+acceptance: "Acceptance:" INT acceptance_cond
+acc_name: "acc-name:" IDENTIFIER (IDENTIFIER|INT)*
+tool: "tool:" STRING STRING?
+name: "name:" STRING
+properties: "properties:" IDENTIFIER*
+headername: HEADERNAME (BOOLEAN|INT|STRING|IDENTIFIER)*
+
+body: (state_name edge*)*
+// the optional dstring can be used to name the state for
+// cosmetic or debugging purposes, as in ltl2dstar's format
+state_name: "State:" label? INT STRING? acc_sig?
+acc_sig: "{" INT* "}"
+edge: label? state_conj acc_sig?
+label:  "[" label_expr "]"
+
+
+state_conj : INT ("&" INT)*
+label_expr : "(" label_expr ")"
+           | or_label_expr
+           | and_label_expr
+           | not_label_expr
+           | atom_label_expr
+           | boolean_label_expr
+           | alias_label_expr
+
+or_label_expr: label_expr "|" label_expr
+and_label_expr: label_expr "&" label_expr
+not_label_expr: "!" label_expr
+alias_label_expr: ANAME
+atom_label_expr: INT
+boolean_label_expr: BOOLEAN
+
+acceptance_cond : "(" acceptance_cond ")"
+                | or_acceptance_cond
+                | and_acceptance_cond
+                | not_acceptance_cond
+                | boolean_acceptance_cond
+                | atom_acceptance_cond
+or_acceptance_cond.2 : acceptance_cond "|" acceptance_cond
+and_acceptance_cond.1 : acceptance_cond "&" acceptance_cond
+not_acceptance_cond : IDENTIFIER "(" "!" INT ")"
+atom_acceptance_cond : IDENTIFIER "(" INT ")"
+boolean_acceptance_cond : BOOLEAN
+
+STRING: /"(\\.|[^\\"])*"/                // a C-like double-quoted string
+INT: /0|[1-9][0-9]*/                     // A non-negative integer less than 2^31 written in base 10 (with no useless 0 at the beginning).
+COMMENT: /\/\*.*\*\//                    // Comments may be introduced between any token by enclosing them with /* and */ (with proper nesting, i.e. /*a/*b*/c*/ is one comment). C++-style comments are not considered because they require newlines. Tools can use comments to output additional information (e.g. debugging data) that should be discarded upon reading.
+WHITESPACE: /[ \t\n\r]/                  // Except in double-quoted strings and comments, whitespace is used only for tokenization and can be discarded afterwards.
+BOOLEAN: /[tf]/                          // The true and false Boolean constants.
+IDENTIFIER: /[a-zA-Z_][0-9a-zA-Z_-]*/    // An identifier made of letters, digits, - and _. Digits and - may not by used as first character, and t or f are not valid identifiers.
+ANAME: /@[0-9a-zA-Z_-]+/                 // An alias name, i.e., "@" followed by some alphanumeric characters, - or _. These are used to identify atomic propositions or subformulas.
+HEADERNAME: /[a-zA-Z_][0-9a-zA-Z_-]*:"/  // Header names are similar to identifiers, except that they are immediately followed by a colon (i.e. no comment or space allowed). If an IDENTIFIER or a BOOLEAN is immediately followed by a colon, it should be considered as a HEADERNAME.
+
+%ignore WHITESPACE
+%ignore COMMENT

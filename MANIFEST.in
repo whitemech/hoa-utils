@@ -1,0 +1,17 @@
+include AUTHORS.md
+include CONTRIBUTING.md
+include HISTORY.md
+include LICENSE
+include README.md
+include pyproject.toml
+include poetry.lock
+include mkdocs.yml
+include Makefile
+
+recursive-include hoa *
+recursive-include tests *
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+recursive-include docs *.md Makefile *.jpg *.png *.gif

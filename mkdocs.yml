@@ -1,0 +1,14 @@
+site_name: HOA Utils
+repo_name: 'whitemech/hoa-utils'
+repo_url: https://github.com/whitemech/hoa-utils
+
+nav:
+- Home: index.md
+- Credits: authors.md
+- How to contribute: contributing.md
+
+theme: 
+  name: material
+markdown_extensions:
+- markdown_include.include:
+    base_path: docs
