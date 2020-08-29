@@ -65,7 +65,7 @@ pip install hoa-utils
 
 Alternatively, you can install it from source (master branch):
 ```
-pip install git+https://github.com/whitemech/pddl.git
+pip install git+https://github.com/whitemech/hoa-utils.git
 ```
 
 ## What you'll find
