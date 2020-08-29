@@ -93,7 +93,7 @@ def parse_args():
 
 if __name__ == "__main__":
     python_files = itertools.chain(
-        Path("hoa2dot").glob("**/*.py"),
+        Path("hoa").glob("**/*.py"),
         Path("tests").glob("**/*.py"),
         Path("scripts").glob("**/*.py"),
     )

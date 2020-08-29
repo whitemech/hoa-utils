@@ -36,17 +36,17 @@ from typing import Any, Dict, List, Optional, Set
 
 from lark import Lark, Transformer, Tree
 
-from hoa2dot.ast.acceptance import (
+from hoa.ast.acceptance import (
     AcceptanceAtom,
     accepting_sets,
     AtomType,
     nb_accepting_sets,
 )
-from hoa2dot.ast.boolean_expression import FalseFormula, TrueFormula
-from hoa2dot.ast.label import LabelAlias, LabelAtom, LabelExpression
-from hoa2dot.core import Acceptance, Edge, HOA, HOABody, HOAHeader, State
-from hoa2dot.helpers.base import assert_
-from hoa2dot.types import (
+from hoa.ast.boolean_expression import FalseFormula, TrueFormula
+from hoa.ast.label import LabelAlias, LabelAtom, LabelExpression
+from hoa.core import Acceptance, Edge, HOA, HOABody, HOAHeader, State
+from hoa.helpers.base import assert_
+from hoa.types import (
     acceptance_parameter,
     HEADER_VALUES,
     hoa_header_value,
@@ -80,7 +80,7 @@ class HOATransformer(Transformer):
         super().__init__(visit_tokens=True)
 
         self._headernames: Set[HeaderItemType] = set()
-        self._aliases: Dict[LabelAlias, LabelExpression] = dict()
+        self._aliases: Dict[str, LabelExpression] = dict()
 
     INT = int
     STRING = string
@@ -209,8 +209,8 @@ class HOATransformer(Transformer):
         label_expression = args[1]
         label_alias = LabelAlias(alias_name, label_expression)
         assert label_alias not in self._aliases, f"Alias {label_alias} defined twice!"
-        self._aliases[label_alias] = label_expression
-        return HeaderItemType.ALIAS, LabelAlias(alias_name, label_expression)
+        self._aliases[alias_name] = label_alias
+        return HeaderItemType.ALIAS, label_alias
 
     def acceptance(self, args):
         """Parse the 'acceptance' node."""
@@ -326,7 +326,9 @@ class HOATransformer(Transformer):
 
     def alias_label_expr(self, args):
         """Parse the 'alias_label_expr' node."""
-        return LabelAlias(alias=args[0], expression=None)
+        if args[0] not in self._aliases:
+            raise ValueError(f"Alias {args[0]} not defined in the header.")
+        return self._aliases[args[0]]
 
     def atom_label_expr(self, args):
         """Parse the 'atom_label_expr' node."""

@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "hoa2dot"
+name = "hoa_utils"
 version = "0.1.0"
 description = "HOA format to Graphviz DOT translator."
 authors = ["Marco Favorito <marco.favorito@gmail.com>, Francesco Fuggitti <francesco.fuggitti@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://whitemech.github.io/hoa2dot"
-repository = "https://github.com/whitemech/hoa2dot.git"
-documentation = "https://whitemech.github.io/hoa2dot"
+homepage = "https://whitemech.github.io/hoa-utils"
+repository = "https://github.com/whitemech/hoa-utils.git"
+documentation = "https://whitemech.github.io/hoa-utils"
 keywords = [
     "HOA",
     "automata",
@@ -23,12 +23,12 @@ classifiers = [
     'Programming Language :: Python :: 3.8',
 ]
 packages = [
-    { include = "hoa2dot" },
+    { include = "hoa" },
 ]
 include = []
 
 [tool.poetry.scripts]
-hoa2dot = 'hoa2dot.__main__:main'
+pyhoafparser = 'hoa.tools.pyhoafparser:main'
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/whitemech/hoa2dot/issues"

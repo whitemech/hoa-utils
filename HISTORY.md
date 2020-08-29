@@ -31,4 +31,4 @@
 ## 0.2.3 (2019-10-10)
 
 * Reverting some changes made on release `0.2.2`.
-* Updated live version: [http://hoa2dot.herokuapp.com/](http://hoa2dot.herokuapp.com/)
+* Updated live version: [http://hoa-utils.herokuapp.com/](http://hoa-utils.herokuapp.com/)

@@ -24,9 +24,9 @@
 #
 from functools import singledispatch
 
-from hoa2dot.ast.acceptance import AcceptanceAtom, AcceptanceCondition
-from hoa2dot.ast.boolean_expression import BinaryOp, UnaryOp
-from hoa2dot.ast.label import LabelAlias, LabelAtom, LabelExpression
+from hoa.ast.acceptance import AcceptanceAtom, AcceptanceCondition
+from hoa.ast.boolean_expression import BinaryOp, FalseFormula, TrueFormula, UnaryOp
+from hoa.ast.label import LabelAlias, LabelAtom, LabelExpression
 
 
 @singledispatch
@@ -48,6 +48,16 @@ def _(f: BinaryOp):
     )
 
 
+@acceptance_condition_to_string.register
+def _(_acceptance_condition: TrueFormula):
+    return "t"
+
+
+@acceptance_condition_to_string.register
+def _(_acceptance_condition: FalseFormula):
+    return "f"
+
+
 @singledispatch
 def label_expression_to_string(_: LabelExpression):
     return str(_)
@@ -60,7 +70,7 @@ def _(f: LabelAtom):
 
 @label_expression_to_string.register
 def _(f: LabelAlias):
-    return f"@{f.alias}"
+    return f"{f.alias}"
 
 
 @label_expression_to_string.register
@@ -71,3 +81,13 @@ def _(f: BinaryOp):
 @label_expression_to_string.register
 def _(f: UnaryOp):
     return f"({f.SYMBOL}{label_expression_to_string(f.argument)})"
+
+
+@label_expression_to_string.register
+def _(_f: TrueFormula):
+    return "t"
+
+
+@label_expression_to_string.register
+def _(_f: FalseFormula):
+    return "f"

@@ -23,4 +23,4 @@
 # SOFTWARE.
 #
 
-"""This module contains the tests for the hoa2dot tool."""
+"""This module contains the tests for the hoa tool."""

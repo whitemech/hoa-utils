@@ -28,7 +28,7 @@ from enum import Enum
 from functools import reduce, singledispatch
 from typing import Optional, Sequence, Set, Tuple, Union
 
-from hoa2dot.ast.boolean_expression import (
+from hoa.ast.boolean_expression import (
     And,
     BinaryOp,
     boolean_op_wrapper,
@@ -40,7 +40,7 @@ from hoa2dot.ast.boolean_expression import (
     TrueFormula,
     UnaryOp,
 )
-from hoa2dot.types import acceptance_parameter, ACCEPTANCE_PARAMETER, identifier
+from hoa.types import acceptance_parameter, ACCEPTANCE_PARAMETER, identifier
 
 
 class AtomType(Enum):
@@ -125,7 +125,7 @@ def _(acceptance_condition: AcceptanceAtom):
     return {acceptance_condition.acceptance_set}
 
 
-def nb_accepting_sets(acceptance_condition: AcceptanceAtom):
+def nb_accepting_sets(acceptance_condition: AcceptanceCondition):
     """Get the number of accepting sets."""
     return len(accepting_sets(acceptance_condition))
 
@@ -136,4 +136,4 @@ class Acceptance:
 
     condition: AcceptanceCondition
     name: Optional[identifier] = None
-    parameters: Optional[Tuple[ACCEPTANCE_PARAMETER, ...]] = None
+    parameters: Tuple[ACCEPTANCE_PARAMETER, ...] = tuple()

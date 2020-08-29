@@ -23,8 +23,8 @@
 # SOFTWARE.
 #
 
-from hoa2dot.ast.acceptance import Acceptance, accepting_sets, Fin, Inf
-from hoa2dot.ast.boolean_expression import PositiveAnd, PositiveOr
+from hoa.ast.acceptance import Acceptance, accepting_sets, Fin, Inf
+from hoa.ast.boolean_expression import PositiveAnd, PositiveOr
 
 
 def test_accepting_sets():

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # MIT License
@@ -23,6 +24,37 @@
 # SOFTWARE.
 #
 
-"""Test the hoa2dot tool."""
 
-# class TestCli
+"""This is the command line tool for translating HOA to DOT format."""
+from pathlib import Path
+
+import click
+
+from hoa.core import HOA
+from hoa.dumpers import dumps
+from hoa.parsers import HOAParser
+
+
+@click.command()
+@click.argument(
+    "input_file",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
+)
+@click.option(
+    "-o",
+    "--output",
+    type=click.Path(file_okay=True, dir_okay=False, writable=True),
+    help="Path to the output file.",
+)
+def main(input_file, output):
+    """Parse and validate a HOA file."""
+    input_string = Path(input_file).read()
+    file = Path(output) if output is not None else None
+    parser = HOAParser()
+    hoa_obj: HOA = parser(input_string)
+    with file.open(mode="w") as fout:
+        print(dumps(hoa_obj), file=fout)
+
+
+if __name__ == "__main__":
+    main()

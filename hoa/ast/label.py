@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from functools import reduce, singledispatch
 from typing import Optional, Set, Union
 
-from hoa2dot.ast.boolean_expression import (
+from hoa.ast.boolean_expression import (
     And,
     BinaryOp,
     boolean_op_wrapper,
@@ -37,7 +37,7 @@ from hoa2dot.ast.boolean_expression import (
     TrueFormula,
     UnaryOp,
 )
-from hoa2dot.types import alias as alias_type
+from hoa.types import alias as alias_type
 
 
 @boolean_op_wrapper(
@@ -58,7 +58,7 @@ class LabelAlias:
     """Implement the label alias."""
 
     alias: alias_type
-    expression: Optional["LabelExpression"] = None
+    expression: "LabelExpression"
 
 
 LabelExpression = Union[

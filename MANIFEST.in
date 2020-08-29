@@ -6,7 +6,7 @@ include README.md
 include Pipfile
 include Pipfile.lock
 
-recursive-include hoa2dot *
+recursive-include hoa-utils *
 recursive-include tests *
 
 recursive-exclude * __pycache__

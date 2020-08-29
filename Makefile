@@ -60,39 +60,39 @@ clean-test: ## remove test and coverage artifacts
 lint-all: black isort lint static bandit safety vulture pylint ## run all linters
 
 lint: ## check style with flake8
-	flake8 hoa2dot tests scripts
+	flake8 hoa tests scripts
 
 static: ## static type checking with mypy
-	mypy hoa2dot tests scripts
+	mypy hoa tests scripts
 
 isort: ## sort import statements with isort
-	isort hoa2dot tests scripts
+	isort hoa tests scripts
 
 isort-check: ## check import statements order with isort
-	isort --check-only hoa2dot tests scripts
+	isort --check-only hoa tests scripts
 
 black: ## apply black formatting
-	black hoa2dot tests scripts
+	black hoa tests scripts
 
 black-check: ## check black formatting
-	black --check --verbose hoa2dot tests scripts
+	black --check --verbose hoa tests scripts
 
 bandit: ## run bandit
-	bandit hoa2dot tests scripts
+	bandit hoa tests scripts
 
 safety: ## run safety
 	safety
 
 pylint: ## run pylint
-	pylint hoa2dot tests scripts
+	pylint hoa tests scripts
 
 vulture: ## run vulture
 	vulture
 
 test: ## run tests quickly with the default Python
 	pytest tests --doctest-modules \
-        hoa2dot tests/ \
-        --cov=hoa2dot \
+        hoa tests/ \
+        --cov=hoa \
         --cov-report=xml \
         --cov-report=html \
         --cov-report=term
@@ -101,7 +101,7 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source hoa2dot -m pytest
+	coverage run --source hoa -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html

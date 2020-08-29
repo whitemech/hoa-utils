@@ -36,9 +36,9 @@ from typing import (
     Union,
 )
 
-from hoa2dot.ast.acceptance import Acceptance
-from hoa2dot.ast.label import LabelAlias, LabelExpression
-from hoa2dot.types import HEADER_VALUES, headername, identifier, string
+from hoa.ast.acceptance import Acceptance
+from hoa.ast.label import LabelAlias, LabelExpression
+from hoa.types import HEADER_VALUES, headername, identifier, string
 
 
 @dataclass(frozen=True, order=True, unsafe_hash=True)
@@ -50,18 +50,6 @@ class State:
     name: Optional[string] = None
     acc_sig: Optional[FrozenSet[int]] = None
 
-    def to_hoa_repr(self) -> str:
-        """Get the HOA format representation of the state."""
-        s = "State: "
-        if self.label is not None:
-            s += "[" + str(self.label) + "]" + " "
-        s += str(self.index) + " "
-        if self.name is not None:
-            s += '"' + self.name + '"' + " "
-        if self.acc_sig is not None:
-            s += "{" + " ".join(map(str, self.acc_sig)) + "}"
-        return s
-
 
 @dataclass(frozen=True, order=True)
 class Edge:
@@ -70,16 +58,6 @@ class Edge:
     state_conj: Sequence[int]
     label: Optional[LabelExpression] = None
     acc_sig: Optional[AbstractSet[int]] = None
-
-    def to_hoa_repr(self) -> str:
-        """Get the HOA format representation of the edge."""
-        s = ""
-        if self.label is not None:
-            s += "[" + str(self.label) + "]" + " "
-        s += "&".join(map(str, self.state_conj)) + " "
-        if self.acc_sig is not None:
-            s += "{" + " ".join(map(str, self.acc_sig)) + "}"
-        return s
 
 
 @dataclass(frozen=True)
@@ -179,22 +157,3 @@ class HOA:
 
     header: HOAHeader
     body: HOABody
-
-    def dump(self, fp: TextIO) -> None:
-        """
-        Dump the data to a file.
-
-        :param fp: the file pointer.
-        :return: None.
-        """
-        fp.write(self.dumps())
-
-    def dumps(self) -> str:
-        """
-        Dump the data into a string in HOA format.
-
-        :return: the string in HOA format.
-        """
-        header = self.header.dumps()
-        body = self.body.dumps()
-        return header + "--BODY--\n" + body + "--END--"

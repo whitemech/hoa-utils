@@ -24,9 +24,9 @@
 #
 
 """Test the printer module."""
-from hoa2dot.ast.acceptance import Fin, NotInf
-from hoa2dot.ast.label import LabelAlias, LabelAtom
-from hoa2dot.printers import acceptance_condition_to_string, label_expression_to_string
+from hoa.ast.acceptance import Fin, NotInf
+from hoa.ast.label import LabelAlias, LabelAtom
+from hoa.printers import acceptance_condition_to_string, label_expression_to_string
 
 
 def test_printer_acceptance():

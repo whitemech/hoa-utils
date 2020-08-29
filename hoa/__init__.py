@@ -24,7 +24,7 @@
 #
 
 
-"""Top-level package for hoa2dot."""
+"""Top-level package for hoa."""
 
 from .__version__ import (
     __author__,

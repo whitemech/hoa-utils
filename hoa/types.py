@@ -26,7 +26,7 @@
 import re
 from typing import Union
 
-from hoa2dot.helpers.base import RegexConstrainedString
+from hoa.helpers.base import RegexConstrainedString
 
 
 class string(RegexConstrainedString):

@@ -23,8 +23,8 @@
 # SOFTWARE.
 #
 
-from hoa2dot.ast.boolean_expression import And, Not, Or
-from hoa2dot.ast.label import LabelAlias, LabelAtom, propositions
+from hoa.ast.boolean_expression import And, Not, Or
+from hoa.ast.label import LabelAlias, LabelAtom, propositions
 
 
 def test_propositions():
