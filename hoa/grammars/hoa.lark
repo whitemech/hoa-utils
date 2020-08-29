@@ -18,7 +18,7 @@ start_state: "Start:" state_conj
 propositions: "AP:" INT STRING*
 alias: "Alias:" ANAME label_expr
 acceptance: "Acceptance:" INT acceptance_cond
-acc_name: "acc-name:" IDENTIFIER (BOOLEAN|INT|IDENTIFIER)*
+acc_name: "acc-name:" IDENTIFIER (IDENTIFIER|INT)*
 tool: "tool:" STRING STRING?
 name: "name:" STRING
 properties: "properties:" IDENTIFIER*
@@ -33,7 +33,7 @@ edge: label? state_conj acc_sig?
 label:  "[" label_expr "]"
 
 
-state_conj : INT | state_conj "&" INT
+state_conj : INT ("&" INT)*
 label_expr : "(" label_expr ")"
            | or_label_expr
            | and_label_expr

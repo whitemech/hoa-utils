@@ -15,4 +15,16 @@
 # along with hoa-utils.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-"""This module contains the tests for the hoa tool."""
+
+"""Top-level package for hoa."""
+
+from .__version__ import (
+    __author__,
+    __author_email__,
+    __copyright__,
+    __description__,
+    __license__,
+    __title__,
+    __url__,
+    __version__,
+)

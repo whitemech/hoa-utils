@@ -15,4 +15,29 @@
 # along with hoa-utils.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-"""This module contains the tests for the hoa tool."""
+"""This module contains the test for the 'hoa.ast.acceptance' module."""
+
+from hoa.ast.acceptance import Acceptance, accepting_sets, Fin, Inf, NotFin, NotInf
+from hoa.ast.boolean_expression import PositiveAnd, PositiveOr
+
+
+def test_accepting_sets():
+    """Test the accepting sets."""
+    fin0 = Fin(0)
+    inf1 = Inf(1)
+    not_fin0 = NotFin(0)
+    not_inf1 = NotInf(1)
+
+    and_ = fin0 & ~inf1
+    or_ = not_fin0 | not_inf1 | and_
+
+    assert isinstance(and_, PositiveAnd)
+    assert isinstance(or_, PositiveOr)
+
+    assert accepting_sets(or_) == {0, 1}
+
+
+def test_acceptance():
+    """Test Acceptance instantiation."""
+    fin0 = Fin(0)
+    Acceptance(fin0, name="fin 0")

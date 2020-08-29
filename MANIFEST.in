@@ -3,13 +3,15 @@ include CONTRIBUTING.md
 include HISTORY.md
 include LICENSE
 include README.md
-include Pipfile
-include Pipfile.lock
+include pyproject.toml
+include poetry.lock
+include mkdocs.yml
+include Makefile
 
-recursive-include hoa2dot *
+recursive-include hoa *
 recursive-include tests *
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
-recursive-include docs *.md conf.py Makefile make.bat *.jpg *.png *.gif
+recursive-include docs *.md Makefile *.jpg *.png *.gif

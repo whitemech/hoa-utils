@@ -14,5 +14,4 @@
 # You should have received a copy of the GNU General Public License
 # along with hoa-utils.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-"""This module contains the tests for the hoa tool."""
+"""This package contains utilities for the AST of an HOA."""

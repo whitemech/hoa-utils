@@ -15,4 +15,23 @@
 # along with hoa-utils.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-"""This module contains the tests for the hoa tool."""
+"""This module contains test utils."""
+import os
+from contextlib import contextmanager
+from pathlib import Path
+
+
+@contextmanager
+def cd(new_dir: Path):
+    """
+    Change directory with a context manager.
+
+    :param new_dir: the new directory where to go.
+    :return: None
+    """
+    old_dir = os.getcwd()
+    try:
+        os.chdir(str(new_dir))
+        yield
+    finally:
+        os.chdir(old_dir)

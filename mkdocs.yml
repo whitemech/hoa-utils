@@ -1,10 +1,8 @@
-site_name: HOA2DOT
+site_name: HOA Utils
 nav:
     - Home: index.md
     - Credits: authors.md
     - How to contribute: contributing.md
-    - Grammars: grammars.md
-    - References: references.md
 
 theme: readthedocs
 markdown_extensions:

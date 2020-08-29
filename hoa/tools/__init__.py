@@ -15,4 +15,4 @@
 # along with hoa-utils.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-"""This module contains the tests for the hoa tool."""
+"""This package contains the code for the CLI tools."""

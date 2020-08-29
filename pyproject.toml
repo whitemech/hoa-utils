@@ -1,40 +1,38 @@
 [tool.poetry]
-name = "hoa2dot"
+name = "hoa_utils"
 version = "0.1.0"
-description = "HOA format to Graphviz DOT translator."
+description = "Utilities for the HOA format."
 authors = ["Marco Favorito <marco.favorito@gmail.com>, Francesco Fuggitti <francesco.fuggitti@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://whitemech.github.io/hoa2dot"
-repository = "https://github.com/whitemech/hoa2dot.git"
-documentation = "https://whitemech.github.io/hoa2dot"
+homepage = "https://whitemech.github.io/hoa-utils"
+repository = "https://github.com/whitemech/hoa-utils.git"
+documentation = "https://whitemech.github.io/hoa-utils"
 keywords = [
     "HOA",
     "automata",
-    "DOT",
-    "Graphviz",
-    "DFA"
+    "HOA-format",
 ]
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
+    'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
 ]
 packages = [
-    { include = "hoa2dot" },
+    { include = "hoa" },
 ]
 include = []
 
 [tool.poetry.scripts]
-hoa2dot = 'hoa2dot.__main__:main'
+pyhoafparser = 'hoa.tools.pyhoafparser:main'
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/whitemech/hoa2dot/issues"
-"Pull Requests" = "https://github.com/whitemech/hoa2dot/pulls"
+"Bug Tracker" = "https://github.com/whitemech/hoa-utils/issues"
+"Pull Requests" = "https://github.com/whitemech/hoa-utils/pulls"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -54,7 +52,7 @@ flake8 = "^3.8.3"
 flake8-docstrings = "^1.5.0"
 flake8-bugbear = "^20.1.4"
 flake8-eradicate = "^0.4.0"
-#flake8-import-order = "^0.18.1" TODO: reintroduce
+flake8-isort = "^4.0.0"
 pylint = "^2.6.0"
 safety = "^1.9.0"
 vulture = "^2.1"
