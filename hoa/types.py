@@ -51,7 +51,7 @@ class integer(RegexConstrainedString):
 
 class boolean(RegexConstrainedString):
     """
-    This type represents an 'boolean' in a HOA file.
+    This type represents a 'boolean' in a HOA file.
 
     It must match the following regex: "[tf]".
     """
@@ -81,7 +81,7 @@ class alias(RegexConstrainedString):
 
 class headername(RegexConstrainedString):
     """
-    This type represents an 'headername' in a HOA file.
+    This type represents a 'headername' in a HOA file.
 
     It must match the following regex: "[a-zA-Z_][0-9a-zA-Z_-]*".
     """
@@ -91,7 +91,7 @@ class headername(RegexConstrainedString):
 
 class hoa_header_value(RegexConstrainedString):
     """
-    This type represents an headername value in a HOA file.
+    This type represents a headername value in a HOA file.
 
     It must match (BOOLEAN|INT|STRING|IDENTIFIER)
     """
@@ -123,7 +123,7 @@ class hoa_header_value(RegexConstrainedString):
     @staticmethod
     def to_hoa_header_value(v: "HEADER_VALUES") -> "hoa_header_value":
         """
-        Convert an header value to its HOA header value string.
+        Convert a header value to its HOA header value string.
 
         :param v: the header value.
         :return: the HOA header value string.
@@ -150,7 +150,7 @@ class proposition(RegexConstrainedString):
 
 class acceptance_parameter(RegexConstrainedString):
     """
-    This type represents a 'acceptance parameter' in a HOA file.
+    This type represents an 'acceptance parameter' in a HOA file.
 
     It must match (IDENTIFIER | INT)
     """
