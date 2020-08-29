@@ -22,6 +22,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+
+"""This module contains helper functions."""
+
 import re
 from pathlib import Path
 from typing import AbstractSet, Any, Callable, Collection, Optional, Sequence
@@ -115,5 +118,6 @@ class RegexConstrainedString(str):
             )
         )
 
-    def __instancecheck__(self, instance):
+    def __instancecheck__(self, instance) -> bool:
+        """Check if a string satisfies the regex constraint."""
         return isinstance(instance, str) and self.REGEX.match(instance)

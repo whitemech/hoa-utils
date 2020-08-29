@@ -25,7 +25,7 @@
 """This module contains the definitions of acceptance atoms."""
 from dataclasses import dataclass
 from functools import reduce, singledispatch
-from typing import Optional, Set, Union
+from typing import Set, Union
 
 from hoa.ast.boolean_expression import (
     And,

@@ -24,6 +24,7 @@
 #
 
 """Test the pyhoafparser tool."""
+
 import tempfile
 from pathlib import Path
 
@@ -31,7 +32,7 @@ import pytest
 from click.testing import CliRunner
 
 from hoa.tools.pyhoafparser import main
-from tests.conftest import HOA_FILES, ROOT_DIR
+from tests.conftest import HOA_FILES
 from tests.test_utils import cd
 
 

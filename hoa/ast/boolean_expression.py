@@ -22,8 +22,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+
+"""This module contains the implementation of generic boolean expressions."""
+
 from dataclasses import dataclass
-from typing import Any, ClassVar, Collection, Generic, Optional, Sequence, Type, TypeVar
+from typing import Any, ClassVar, Generic, Optional, Sequence, Type, TypeVar
 
 T = TypeVar("T")
 

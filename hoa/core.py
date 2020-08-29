@@ -25,16 +25,7 @@
 
 """This module contains the core definitions for the tool."""
 from dataclasses import dataclass
-from typing import (
-    AbstractSet,
-    Dict,
-    FrozenSet,
-    Optional,
-    Sequence,
-    TextIO,
-    Tuple,
-    Union,
-)
+from typing import AbstractSet, Dict, FrozenSet, Optional, Sequence, Tuple, Union
 
 from hoa.ast.acceptance import Acceptance
 from hoa.ast.label import LabelAlias, LabelExpression

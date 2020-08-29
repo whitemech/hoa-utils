@@ -23,6 +23,8 @@
 # SOFTWARE.
 #
 
+"""This module contains the test for the 'hoa.ast.acceptance' module."""
+
 from hoa.ast.acceptance import Acceptance, accepting_sets, Fin, Inf
 from hoa.ast.boolean_expression import PositiveAnd, PositiveOr
 

@@ -26,21 +26,18 @@
 from dataclasses import dataclass
 from enum import Enum
 from functools import reduce, singledispatch
-from typing import Optional, Sequence, Set, Tuple, Union
+from typing import Optional, Set, Tuple, Union
 
 from hoa.ast.boolean_expression import (
-    And,
     BinaryOp,
     boolean_op_wrapper,
     FalseFormula,
-    Not,
-    Or,
     PositiveAnd,
     PositiveOr,
     TrueFormula,
     UnaryOp,
 )
-from hoa.types import acceptance_parameter, ACCEPTANCE_PARAMETER, identifier
+from hoa.types import ACCEPTANCE_PARAMETER, identifier
 
 
 class AtomType(Enum):
@@ -73,18 +70,22 @@ class AcceptanceAtom:
 
 
 def Fin(acceptance_set: int):
+    """Return the acceptance atom with finite acceptance."""
     return AcceptanceAtom(AtomType.FINITE, acceptance_set, False)
 
 
 def NotFin(acceptance_set: int):
+    """Return the acceptance atom with finite acceptance negated'."""
     return ~Fin(acceptance_set)
 
 
 def Inf(acceptance_set: int):
+    """Return the acceptance atom with infinite acceptance."""
     return AcceptanceAtom(AtomType.INFINITE, acceptance_set, False)
 
 
 def NotInf(acceptance_set: int):
+    """Return the acceptance atom with infinite acceptance negated."""
     return ~Inf(acceptance_set)
 
 

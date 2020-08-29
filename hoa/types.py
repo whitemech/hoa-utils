@@ -30,7 +30,7 @@ from hoa.helpers.base import RegexConstrainedString
 
 
 class string(RegexConstrainedString):
-    """
+    r"""
     This type represents a 'string' in a HOA file.
 
     It must match the following regex: '(\\.|[^\\"])*'.

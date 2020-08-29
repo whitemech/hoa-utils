@@ -24,7 +24,6 @@
 #
 
 """Test the parsing module."""
-import os
 from collections import OrderedDict
 from io import StringIO
 from pathlib import Path
@@ -33,11 +32,11 @@ import pytest
 
 from hoa.ast.acceptance import Fin, Inf, nb_accepting_sets
 from hoa.ast.boolean_expression import TRUE
-from hoa.ast.label import LabelAlias, LabelAtom, propositions
+from hoa.ast.label import LabelAlias, LabelAtom
 from hoa.core import Acceptance, Edge, HOA, HOABody, HOAHeader, State
 from hoa.dumpers import dump
 from hoa.parsers import HOAParser
-from hoa.types import alias, identifier, proposition, string
+from hoa.types import alias, identifier, string
 
 from .conftest import HOA_FILES, TEST_ROOT_DIR
 

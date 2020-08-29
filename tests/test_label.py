@@ -23,6 +23,8 @@
 # SOFTWARE.
 #
 
+"""This module contains the test for the 'hoa.ast.label' module."""
+
 from hoa.ast.boolean_expression import And, Not, Or
 from hoa.ast.label import LabelAlias, LabelAtom, propositions
 from hoa.types import alias

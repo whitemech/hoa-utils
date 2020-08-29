@@ -25,13 +25,11 @@
 
 """This module contains utilities to dump the HOA objects."""
 from functools import singledispatch
-from textwrap import dedent
 from typing import TextIO
 
 from hoa.ast.acceptance import nb_accepting_sets
 from hoa.core import Edge, HOA, HOABody, HOAHeader, State
 from hoa.printers import acceptance_condition_to_string, label_expression_to_string
-from hoa.types import acceptance_parameter
 
 
 def dump(hoa: HOA, fp: TextIO) -> None:
