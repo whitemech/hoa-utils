@@ -33,7 +33,7 @@
     <img alt="docs" src="https://github.com/whitemech/hoa-utils/workflows/docs/badge.svg">
   </a>
   <a href="https://codecov.io/gh/whitemech/hoa-utils">
-    <img alt="codecov" src="https://codecov.io/gh/whitemech/hoa-utils/branch/master/graph/badge.svg?token=FG3ATGP5P5">
+    <img src="https://codecov.io/gh/whitemech/hoa-utils/branch/master/graph/badge.svg" />
   </a>
 </p>
 <p align="center">
