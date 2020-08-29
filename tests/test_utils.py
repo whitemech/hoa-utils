@@ -23,24 +23,23 @@
 # SOFTWARE.
 #
 
-from hoa.ast.boolean_expression import And, Not, Or
-from hoa.ast.label import LabelAlias, LabelAtom, propositions
-from hoa.types import alias
+"""This module contains test utils."""
+import os
+from contextlib import contextmanager
+from pathlib import Path
 
 
-def test_propositions():
-    """Test the accepting sets."""
-    a = LabelAtom(0)
-    b = LabelAtom(1)
-    a_and_b = a & b
-    c = LabelAtom(2)
-    d = LabelAlias(alias("@d"), a & b)
+@contextmanager
+def cd(new_dir: Path):
+    """
+    Change directory with a context manager.
 
-    or_ = c | d
-    not_ = ~or_
-
-    assert isinstance(a_and_b, And)
-    assert isinstance(or_, Or)
-    assert isinstance(not_, Not)
-
-    assert propositions(not_) == {0, 1, 2}
+    :param new_dir: the new directory where to go.
+    :return: None
+    """
+    old_dir = os.getcwd()
+    try:
+        os.chdir(str(new_dir))
+        yield
+    finally:
+        os.chdir(old_dir)

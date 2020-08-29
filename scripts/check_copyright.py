@@ -87,7 +87,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser("check_copyright_notice")
     parser.add_argument(
-        "--directory", type=str, default=".", help="The path to the repository root."
+        "--directory", type=str, default=".", help="The new_dir to the repository root."
     )
 
 

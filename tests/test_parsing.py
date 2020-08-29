@@ -39,23 +39,12 @@ from hoa.dumpers import dump
 from hoa.parsers import HOAParser
 from hoa.types import alias, identifier, proposition, string
 
-from .conftest import TEST_ROOT_DIR
+from .conftest import HOA_FILES, TEST_ROOT_DIR
 
 
 @pytest.mark.parametrize(
-    ["filepath"],
-    [
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut1.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut2.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut3.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut3.2.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut4.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut5.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut6.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut7.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut8.hoa"),),
-        (os.path.join(TEST_ROOT_DIR, "examples", "aut11.hoa"),),
-    ],
+    "filepath",
+    HOA_FILES,
 )
 def test_parsing_is_deterministic(filepath):
     """Test that parsing is deterministic."""

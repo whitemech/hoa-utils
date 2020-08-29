@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hoa_utils"
 version = "0.1.0"
-description = "HOA format to Graphviz DOT translator."
+description = "Utilities for the HOA format."
 authors = ["Marco Favorito <marco.favorito@gmail.com>, Francesco Fuggitti <francesco.fuggitti@gmail.com>"]
 license = "MIT"
 readme = "README.md"

@@ -27,6 +27,7 @@
 from hoa.ast.acceptance import Fin, NotInf
 from hoa.ast.label import LabelAlias, LabelAtom
 from hoa.printers import acceptance_condition_to_string, label_expression_to_string
+from hoa.types import alias
 
 
 def test_printer_acceptance():
@@ -43,14 +44,14 @@ def test_printer_acceptance():
 
 def test_printer_label():
     """Test the printer for label expressions."""
-    a = LabelAtom("a")
-    b = LabelAtom("b")
-    c = LabelAtom("c")
-    d = LabelAlias("d", a & b)
+    a = LabelAtom(0)
+    b = LabelAtom(1)
+    c = LabelAtom(2)
+    d = LabelAlias(alias("@d"), a & b)
 
     or_ = c | d
     not_ = ~or_
 
-    expected = "(!(c | @d))"
+    expected = "(!(2 | @d))"
     actual = label_expression_to_string(not_)
-    assert expected == actual
+    assert actual == expected

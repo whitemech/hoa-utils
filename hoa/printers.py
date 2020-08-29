@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+"""This module contains """
 from functools import singledispatch
 
 from hoa.ast.acceptance import AcceptanceAtom, AcceptanceCondition

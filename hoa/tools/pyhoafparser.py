@@ -48,12 +48,16 @@ from hoa.parsers import HOAParser
 )
 def main(input_file, output):
     """Parse and validate a HOA file."""
-    input_string = Path(input_file).read()
+    input_string = Path(input_file).read_text()
     file = Path(output) if output is not None else None
     parser = HOAParser()
     hoa_obj: HOA = parser(input_string)
-    with file.open(mode="w") as fout:
-        print(dumps(hoa_obj), file=fout)
+
+    if output is None:
+        print(dumps(hoa_obj))
+    else:
+        with file.open(mode="w") as fout:
+            print(dumps(hoa_obj), file=fout)
 
 
 if __name__ == "__main__":

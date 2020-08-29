@@ -23,6 +23,41 @@
 # SOFTWARE.
 #
 
-"""Test the hoa tool."""
+"""Test the pyhoafparser tool."""
+import tempfile
+from pathlib import Path
 
-# class TestCli
+import pytest
+from click.testing import CliRunner
+
+from hoa.tools.pyhoafparser import main
+from tests.conftest import HOA_FILES, ROOT_DIR
+from tests.test_utils import cd
+
+
+@pytest.mark.parametrize(
+    "filepath",
+    HOA_FILES,
+)
+def test_pyhoafparser_positive(filepath):
+    """Test pyhoafparser, positive case."""
+    runner = CliRunner()
+    result = runner.invoke(main, [str(filepath.absolute())])
+    assert result.exit_code == 0, result.exc_info
+
+
+@pytest.mark.parametrize(
+    "filepath",
+    HOA_FILES,
+)
+def test_pyhoafparser_positive_with_file(filepath):
+    """Test pyhoafparser, positive case, with output file."""
+    runner = CliRunner()
+    with tempfile.TemporaryDirectory() as temp_dir:
+        output_file = "output"
+        with cd(temp_dir):
+            result = runner.invoke(
+                main, [str(filepath.absolute()), "--output", output_file]
+            )
+        assert result.exit_code == 0, result.exc_info
+        assert Path(temp_dir, output_file).exists()

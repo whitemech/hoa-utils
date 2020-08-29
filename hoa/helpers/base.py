@@ -28,7 +28,7 @@ from typing import AbstractSet, Any, Callable, Collection, Optional, Sequence
 
 
 def _get_current_path() -> Path:
-    """Get the path to the file where the function is called."""
+    """Get the new_dir to the file where the function is called."""
     import inspect
     import os
 

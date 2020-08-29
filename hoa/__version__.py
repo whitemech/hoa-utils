@@ -26,10 +26,10 @@
 """Declaration of metadata for the package."""
 
 __title__ = "hoa"
-__description__ = "HOA format to Graphviz DOT translator (and vice versa)"
-__url__ = "https://github.com/logics4ai-sapienza/hoa-utils.git"
+__description__ = "Utilities for the HOA format."
+__url__ = "https://github.com/whitemech/hoa-utils.git"
 __version__ = "0.1.0"
 __author__ = "Marco Favorito, Francesco Fuggitti"
 __author_email__ = "marco.favorito@gmail.com, francesco.fuggitti@gmail.com"
 __license__ = "MIT License"
-__copyright__ = "2019 Marco Favorito, Francesco Fuggitti"
+__copyright__ = "2020 Marco Favorito, Francesco Fuggitti"

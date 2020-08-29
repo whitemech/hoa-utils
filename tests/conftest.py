@@ -30,3 +30,16 @@ from pathlib import Path
 
 TEST_ROOT_DIR = os.path.dirname(inspect.getfile(inspect.currentframe()))  # type: ignore
 ROOT_DIR = str(Path(TEST_ROOT_DIR, "..").resolve())  # type: ignore
+
+HOA_FILES = [
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut1.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut2.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut3.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut3.2.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut4.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut5.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut6.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut7.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut8.hoa")),
+    Path(os.path.join(TEST_ROOT_DIR, "examples", "aut11.hoa")),
+]
