@@ -24,7 +24,7 @@
 #
 
 """Test the pyhoafparser tool."""
-
+import shutil
 import tempfile
 from io import StringIO
 from pathlib import Path
@@ -48,6 +48,11 @@ def test_dump(*_mocks):
     dump(hoa_object, fp)
     fp.seek(0)
     assert fp.read() == "example"
+
+
+def test_which_pyhoafparser():
+    """Test 'pyhoafparser' is in the PATH."""
+    assert shutil.which("pyhoafparser") is not None
 
 
 @pytest.mark.parametrize(
