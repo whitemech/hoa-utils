@@ -2,8 +2,8 @@
 name = "hoa_utils"
 version = "0.1.0"
 description = "Utilities for the HOA format."
-authors = ["Marco Favorito <marco.favorito@gmail.com>, Francesco Fuggitti <francesco.fuggitti@gmail.com>"]
-license = "MIT"
+authors = ["Marco Favorito <marco.favorito@gmail.com>", "Francesco Fuggitti <francesco.fuggitti@gmail.com>"]
+license = "LGPL-3.0-or-later"
 readme = "README.md"
 homepage = "https://whitemech.github.io/hoa-utils"
 repository = "https://github.com/whitemech/hoa-utils.git"
