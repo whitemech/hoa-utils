@@ -68,4 +68,4 @@ class RegexConstrainedString(str):
 
     def __instancecheck__(self, instance) -> bool:
         """Check if a string satisfies the regex constraint."""
-        return isinstance(instance, str) and self.REGEX.match(instance)
+        return isinstance(instance, str) and self.REGEX.match(instance) is not None

@@ -55,7 +55,7 @@ def dumps(obj):
     raise ValueError(f"Type {type(obj)} not expected.")
 
 
-@dumps.register
+@dumps.register  # type: ignore
 def _(hoa: HOA) -> str:
     """
     Dump the data into a string in HOA format.
@@ -68,7 +68,7 @@ def _(hoa: HOA) -> str:
     return header + "--BODY--\n" + body + "--END--"
 
 
-@dumps.register
+@dumps.register  # type: ignore
 def _(hoa_header: HOAHeader):
     """
     Dump the data into a string in HOA format.
@@ -140,7 +140,7 @@ def _(hoa_header: HOAHeader):
     return s
 
 
-@dumps.register
+@dumps.register  # type: ignore
 def _(hoa_body: HOABody):
     """
     Dump the data into a string in HOA format.
@@ -159,7 +159,7 @@ def _(hoa_body: HOABody):
     )
 
 
-@dumps.register
+@dumps.register  # type: ignore
 def _(state: State) -> str:
     """Get the HOA format representation of the state."""
     s = "State: "
@@ -173,7 +173,7 @@ def _(state: State) -> str:
     return s
 
 
-@dumps.register
+@dumps.register  # type: ignore
 def _(edge: Edge) -> str:
     """Get the HOA format representation of the edge."""
     s = ""

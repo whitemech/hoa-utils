@@ -35,8 +35,10 @@ It is assumed the script is run from the repository root.
 """
 
 import itertools
+import operator
 import re
 import sys
+from functools import partial
 from pathlib import Path
 
 HEADER_REGEX = r"""(#!/usr/bin/env python3
@@ -92,10 +94,14 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    python_files = itertools.chain(
-        Path("hoa").glob("**/*.py"),
-        Path("tests").glob("**/*.py"),
-        Path("scripts").glob("**/*.py"),
+    exclude_files = {Path("scripts", "whitelist.py")}
+    python_files = filter(
+        partial(operator.contains, exclude_files),
+        itertools.chain(
+            Path("hoa").glob("**/*.py"),
+            Path("tests").glob("**/*.py"),
+            Path("scripts").glob("**/*.py"),
+        ),
     )
 
     bad_files = [filepath for filepath in python_files if not check_copyright(filepath)]

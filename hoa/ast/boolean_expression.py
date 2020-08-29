@@ -157,7 +157,7 @@ def boolean_op_wrapper(
     *,
     and_: Optional[Type[BinaryOp]] = _And,
     or_: Optional[Type[BinaryOp]] = _Or,
-    not_: Optional[Type[BinaryOp]] = _Not,
+    not_: Optional[Type[UnaryOp]] = _Not,
 ):
     """
     Provide the atom class with __and__, __or__ and __not__ dunder methods.

@@ -38,13 +38,13 @@ def acceptance_condition_to_string(_: AcceptanceCondition):
     return str(_)
 
 
-@acceptance_condition_to_string.register
+@acceptance_condition_to_string.register  # type: ignore
 def _(f: AcceptanceAtom):
     """Transform an acceptance atom into a string."""
     return f"{f.atom_type.value}({'!' if f.negated else ''}{f.acceptance_set})"
 
 
-@acceptance_condition_to_string.register
+@acceptance_condition_to_string.register  # type: ignore
 def _(f: BinaryOp):
     """Transform a binary operation over acceptance formulas into a string."""
     return (
@@ -54,13 +54,13 @@ def _(f: BinaryOp):
     )
 
 
-@acceptance_condition_to_string.register
+@acceptance_condition_to_string.register  # type: ignore
 def _(_acceptance_condition: TrueFormula):
     """Transform true into a string."""
     return "t"
 
 
-@acceptance_condition_to_string.register
+@acceptance_condition_to_string.register  # type: ignore
 def _(_acceptance_condition: FalseFormula):
     """Transform false into a string."""
     return "f"
@@ -72,37 +72,37 @@ def label_expression_to_string(_: LabelExpression):
     return str(_)
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(f: LabelAtom):
     """Transform a label atom into a string."""
     return f"{f.proposition}"
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(f: LabelAlias):
     """Transform a label alias into a string."""
     return f"{f.alias}"
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(f: BinaryOp):
     """Transform a binary operation over labels into a string."""
     return "(" + f" {f.SYMBOL} ".join(map(label_expression_to_string, f.operands)) + ")"
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(f: UnaryOp):
     """Transform a unary operation over labels into a string."""
     return f"({f.SYMBOL}{label_expression_to_string(f.argument)})"
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(_f: TrueFormula):
     """Transform a true formula into a string."""
     return "t"
 
 
-@label_expression_to_string.register
+@label_expression_to_string.register  # type: ignore
 def _(_f: FalseFormula):
     """Transform a false formula into a string."""
     return "f"

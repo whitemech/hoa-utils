@@ -66,80 +66,12 @@ class HOAHeader:
     properties: Optional[Sequence[identifier]] = None
     headernames: Optional[Dict[headername, Sequence[HEADER_VALUES]]] = None
 
-    def dumps(self) -> str:
-        """
-        Dump the header data into a string in HOA format.
-
-        :return: the header string in HOA format.
-        """
-        s = "HOA: {}\n".format(self.format_version)
-        if self.nb_states is not None:
-            s += "States: {}\n".format(self.nb_states)
-        if self.start_states is not None:
-            s += "\n".join("Start: {}".format(idx) for idx in self.start_states) + "\n"
-        if self.propositions is not None and len(self.propositions) > 0:
-            propositions_string = '"' + '" "'.join(p for p in self.propositions) + '"'
-            s += "AP: {nb} {prop}\n".format(
-                nb=len(self.propositions), prop=propositions_string
-            )
-        if self.aliases is not None and len(self.aliases) > 0:
-            s += (
-                "\n".join(
-                    [
-                        "Alias: {} {}".format(
-                            alias_label.alias, str(alias_label.expression)
-                        )
-                        for alias_label in self.aliases
-                    ]
-                )
-                + "\n"
-            )
-        if self.acceptance_name is not None:
-            s += "acc-name: {}\n".format(self.acceptance_name)
-        s += self.acceptance.get_hoa_repr() + "\n"
-        if self.tool is not None:
-            s += "tool: {}\n".format(" ".join(self.tool))
-        if self.name is not None:
-            s += 'name: "{}"\n'.format(self.name)
-        if self.properties is not None and len(self.properties) > 0:
-            s += "properties: {}\n".format(" ".join(self.properties))
-        if self.headernames is not None and len(self.headernames) > 0:
-            s += (
-                "\n".join(
-                    [
-                        "{}: {}".format(key, " ".join(values))
-                        for key, values in self.headernames.items()
-                    ]
-                )
-                + "\n"
-            )
-
-        return s
-
 
 @dataclass(frozen=True)
 class HOABody:
     """This class implements a data structure for the HOA file format header."""
 
     state2edges: Dict[State, Sequence[Edge]]
-
-    def dumps(self) -> str:
-        """
-        Dump the body data into a string in HOA format.
-
-        :return: the body string in HOA format.
-        """
-        return (
-            "\n".join(
-                [
-                    state.to_hoa_repr()
-                    + "\n"
-                    + "\n".join(map(lambda x: x.to_hoa_repr(), edges))
-                    for state, edges in self.state2edges.items()
-                ]
-            )
-            + "\n"
-        )
 
 
 @dataclass(frozen=True)

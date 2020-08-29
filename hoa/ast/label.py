@@ -83,21 +83,21 @@ def propositions(_) -> Set[int]:
     return set()
 
 
-@propositions.register
+@propositions.register  # type: ignore
 def _(label_expression: BinaryOp):
     return reduce(lambda x, y: x.union(y), map(propositions, label_expression.operands))
 
 
-@propositions.register
+@propositions.register  # type: ignore
 def _(label_expression: UnaryOp):
     return propositions(label_expression.argument)
 
 
-@propositions.register
+@propositions.register  # type: ignore
 def _(label_expression: LabelAtom):
     return {label_expression.proposition}
 
 
-@propositions.register
+@propositions.register  # type: ignore
 def _(label_expression: LabelAlias):
     return propositions(label_expression.expression)

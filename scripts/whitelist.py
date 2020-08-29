@@ -1,3 +1,4 @@
+# type: ignore
 NotFin  # unused function (hoa/ast/acceptance.py:77)
 NotInf  # unused function (hoa/ast/acceptance.py:94)
 _.__and__  # unused attribute (hoa/ast/boolean_expression.py:174)

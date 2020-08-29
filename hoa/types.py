@@ -101,7 +101,7 @@ class hoa_header_value(RegexConstrainedString):
     )
 
     @staticmethod
-    def to_header_value(s: "hoa_header_value") -> "HEADER_VALUES":
+    def to_header_value(value: "hoa_header_value") -> "HEADER_VALUES":
         """
         Convert a HOA header value string to a Python object.
 
@@ -109,7 +109,7 @@ class hoa_header_value(RegexConstrainedString):
         :return: the header value.
         """
         # from the stricter to the looser
-        s = str(s)
+        s = str(value)
         if re.match(boolean.REGEX, s):
             return bool(s)
         if re.match(integer.REGEX, s):
@@ -160,7 +160,7 @@ class acceptance_parameter(RegexConstrainedString):
     )
 
     @staticmethod
-    def to_parameter_value(s: "hoa_header_value") -> "ACCEPTANCE_PARAMETER":
+    def to_parameter_value(value: "hoa_header_value") -> "ACCEPTANCE_PARAMETER":
         """
         Convert a HOA acceptance parameter string to a Python object.
 
@@ -168,7 +168,7 @@ class acceptance_parameter(RegexConstrainedString):
         :return: the parameter value.
         """
         # from the stricter to the looser
-        s = str(s)
+        s = str(value)
         if re.match(boolean.REGEX, s):
             return bool(s)
         if re.match(integer.REGEX, s):

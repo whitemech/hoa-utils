@@ -123,19 +123,19 @@ def accepting_sets(_) -> Set[int]:
     return set()
 
 
-@accepting_sets.register
+@accepting_sets.register  # type: ignore
 def _(acceptance_condition: BinaryOp):
     return reduce(
         lambda x, y: x.union(y), map(accepting_sets, acceptance_condition.operands)
     )
 
 
-@accepting_sets.register
+@accepting_sets.register  # type: ignore
 def _(acceptance_condition: UnaryOp):
     return accepting_sets(acceptance_condition.argument)
 
 
-@accepting_sets.register
+@accepting_sets.register  # type: ignore
 def _(acceptance_condition: AcceptanceAtom):
     return {acceptance_condition.acceptance_set}
 
